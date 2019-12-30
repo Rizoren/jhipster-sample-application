@@ -102,10 +102,18 @@ public class DocumentResource {
 
      * @param pageable the pagination information.
 
+     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of documents in body.
      */
     @GetMapping("/documents")
-    public ResponseEntity<List<Document>> getAllDocuments(Pageable pageable) {
+    public ResponseEntity<List<Document>> getAllDocuments(Pageable pageable, @RequestParam(required = false) String filter) {
+        if ("subsistence-is-null".equals(filter)) {
+            log.debug("REST request to get all Documents where subsistence is null");
+            return new ResponseEntity<>(StreamSupport
+                .stream(documentRepository.findAll().spliterator(), false)
+                .filter(document -> document.getSubsistence() == null)
+                .collect(Collectors.toList()), HttpStatus.OK);
+        }
         log.debug("REST request to get a page of Documents");
         Page<Document> page = documentRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

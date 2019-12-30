@@ -36,7 +36,7 @@
             "otherEntityName": "document",
             "otherEntityRelationshipName": "subsistence",
             "relationshipName": "document",
-            "otherEntityField": "docName",
+            "otherEntityField": "id",
             "ownerSide": true
         },
         {
