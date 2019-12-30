@@ -10,8 +10,12 @@ import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { ISubsistence, Subsistence } from 'app/shared/model/subsistence.model';
 import { SubsistenceService } from './subsistence.service';
+import { IDocument } from 'app/shared/model/document.model';
+import { DocumentService } from 'app/entities/document/document.service';
 import { IRegion } from 'app/shared/model/region.model';
 import { RegionService } from 'app/entities/region/region.service';
+
+type SelectableEntity = IDocument | IRegion;
 
 @Component({
   selector: 'jhi-subsistence-update',
@@ -19,6 +23,8 @@ import { RegionService } from 'app/entities/region/region.service';
 })
 export class SubsistenceUpdateComponent implements OnInit {
   isSaving = false;
+
+  documents: IDocument[] = [];
 
   regions: IRegion[] = [];
 
@@ -31,11 +37,13 @@ export class SubsistenceUpdateComponent implements OnInit {
     valueForCapableSL: [],
     valueForPensionersSL: [],
     valueForChildrenSL: [],
-    subsistence: []
+    document: [],
+    region: []
   });
 
   constructor(
     protected subsistenceService: SubsistenceService,
+    protected documentService: DocumentService,
     protected regionService: RegionService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -44,6 +52,30 @@ export class SubsistenceUpdateComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ subsistence }) => {
       this.updateForm(subsistence);
+
+      this.documentService
+        .query({ filter: 'subsistence-is-null' })
+        .pipe(
+          map((res: HttpResponse<IDocument[]>) => {
+            return res.body ? res.body : [];
+          })
+        )
+        .subscribe((resBody: IDocument[]) => {
+          if (!subsistence.document || !subsistence.document.id) {
+            this.documents = resBody;
+          } else {
+            this.documentService
+              .find(subsistence.document.id)
+              .pipe(
+                map((subRes: HttpResponse<IDocument>) => {
+                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
+                })
+              )
+              .subscribe((concatRes: IDocument[]) => {
+                this.documents = concatRes;
+              });
+          }
+        });
 
       this.regionService
         .query()
@@ -66,7 +98,8 @@ export class SubsistenceUpdateComponent implements OnInit {
       valueForCapableSL: subsistence.valueForCapableSL,
       valueForPensionersSL: subsistence.valueForPensionersSL,
       valueForChildrenSL: subsistence.valueForChildrenSL,
-      subsistence: subsistence.subsistence
+      document: subsistence.document,
+      region: subsistence.region
     });
   }
 
@@ -98,7 +131,8 @@ export class SubsistenceUpdateComponent implements OnInit {
       valueForCapableSL: this.editForm.get(['valueForCapableSL'])!.value,
       valueForPensionersSL: this.editForm.get(['valueForPensionersSL'])!.value,
       valueForChildrenSL: this.editForm.get(['valueForChildrenSL'])!.value,
-      subsistence: this.editForm.get(['subsistence'])!.value
+      document: this.editForm.get(['document'])!.value,
+      region: this.editForm.get(['region'])!.value
     };
   }
 
@@ -118,7 +152,7 @@ export class SubsistenceUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IRegion): any {
+  trackById(index: number, item: SelectableEntity): any {
     return item.id;
   }
 }

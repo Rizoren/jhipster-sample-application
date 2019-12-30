@@ -32,10 +32,18 @@
     ],
     "relationships": [
         {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "document",
+            "otherEntityRelationshipName": "subsistence",
+            "relationshipName": "document",
+            "otherEntityField": "docName",
+            "ownerSide": true
+        },
+        {
             "relationshipType": "many-to-one",
             "otherEntityName": "region",
             "otherEntityRelationshipName": "subsistence",
-            "relationshipName": "subsistence",
+            "relationshipName": "region",
             "otherEntityField": "regionName"
         }
     ],

@@ -8,9 +8,15 @@
     -->
     <changeSet id="20191230070950-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="subsistence_id"
+        <addForeignKeyConstraint baseColumnNames="document_id"
                                  baseTableName="subsistence"
-                                 constraintName="fk_subsistence_subsistence_id"
+                                 constraintName="fk_subsistence_document_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="document"/>
+
+        <addForeignKeyConstraint baseColumnNames="region_id"
+                                 baseTableName="subsistence"
+                                 constraintName="fk_subsistence_region_id"
                                  referencedColumnNames="id"
                                  referencedTableName="region"/>
 

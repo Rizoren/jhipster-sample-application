@@ -49,9 +49,13 @@ public class Subsistence implements Serializable {
     @Column(name = "value_for_children_sl")
     private Double valueForChildrenSL;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Document document;
+
     @ManyToOne
     @JsonIgnoreProperties("subsistences")
-    private Region subsistence;
+    private Region region;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -153,17 +157,30 @@ public class Subsistence implements Serializable {
         this.valueForChildrenSL = valueForChildrenSL;
     }
 
-    public Region getSubsistence() {
-        return subsistence;
+    public Document getDocument() {
+        return document;
     }
 
-    public Subsistence subsistence(Region region) {
-        this.subsistence = region;
+    public Subsistence document(Document document) {
+        this.document = document;
         return this;
     }
 
-    public void setSubsistence(Region region) {
-        this.subsistence = region;
+    public void setDocument(Document document) {
+        this.document = document;
+    }
+
+    public Region getRegion() {
+        return region;
+    }
+
+    public Subsistence region(Region region) {
+        this.region = region;
+        return this;
+    }
+
+    public void setRegion(Region region) {
+        this.region = region;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
