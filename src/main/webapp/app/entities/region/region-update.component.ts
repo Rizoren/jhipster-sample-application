@@ -17,8 +17,8 @@ export class RegionUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    regionName: [],
-    regionCode: []
+    regionName: [null, [Validators.required, Validators.maxLength(255)]],
+    regionCode: [null, [Validators.required, Validators.minLength(2), Validators.maxLength(10)]]
   });
 
   constructor(protected regionService: RegionService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}

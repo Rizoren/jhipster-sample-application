@@ -15,14 +15,14 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="year_sl" type="integer">
-                <constraints nullable="true" />
+            <column name="year_sl" type="varchar(10)">
+                <constraints nullable="false" />
             </column>
             <column name="quarter_sl" type="integer">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="date_accept_sl" type="datetime">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
             <column name="value_per_capita_sl" type="double">
                 <constraints nullable="true" />
@@ -36,8 +36,8 @@
             <column name="value_for_children_sl" type="double">
                 <constraints nullable="true" />
             </column>
-            <column name="document_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_subsistence_document_id" />
+            <column name="doc_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_subsistence_doc_id" />
             </column>
             <column name="region_id" type="bigint">
                 <constraints nullable="true" />
@@ -66,7 +66,7 @@
                   separator=";"
                   tableName="subsistence">
             <column name="id" type="numeric"/>
-            <column name="year_sl" type="numeric"/>
+            <column name="year_sl" type="string"/>
             <column name="quarter_sl" type="numeric"/>
             <column name="date_accept_sl" type="datetime"/>
             <column name="value_per_capita_sl" type="numeric"/>

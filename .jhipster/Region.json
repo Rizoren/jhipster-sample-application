@@ -3,11 +3,23 @@
     "fields": [
         {
             "fieldName": "regionName",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 255
         },
         {
             "fieldName": "regionCode",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "minlength",
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 2,
+            "fieldValidateRulesMaxlength": 10
         }
     ],
     "relationships": [],
@@ -16,8 +28,8 @@
     "entityTableName": "region",
     "dto": "no",
     "pagination": "infinite-scroll",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "readOnly": false,
     "clientRootFolder": "",

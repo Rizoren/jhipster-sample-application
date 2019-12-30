@@ -13,6 +13,16 @@
                     <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.document.docName" for="field_docName">Doc Name</label>
                     <input type="text" class="form-control" name="docName" id="field_docName"
                            formControlName="docName"/>
+                    <div *ngIf="editForm.get('docName')!.invalid && (editForm.get('docName')!.dirty || editForm.get('docName')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('docName')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('docName')?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 255 }">
+                        This field cannot be longer than 255 characters.
+                        </small>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.document.docDate" for="field_docDate">Doc Date</label>

@@ -3,31 +3,64 @@
     "fields": [
         {
             "fieldName": "yearSL",
-            "fieldType": "Integer"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength",
+                "maxlength"
+            ],
+            "fieldValidateRulesMinlength": 4,
+            "fieldValidateRulesMaxlength": 10
         },
         {
             "fieldName": "quarterSL",
-            "fieldType": "Integer"
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required",
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": 1,
+            "fieldValidateRulesMax": 4
         },
         {
             "fieldName": "dateAcceptSL",
-            "fieldType": "Instant"
+            "fieldType": "Instant",
+            "fieldValidateRules": [
+                "required"
+            ]
         },
         {
             "fieldName": "valuePerCapitaSL",
-            "fieldType": "Double"
+            "fieldType": "Double",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
         },
         {
             "fieldName": "valueForCapableSL",
-            "fieldType": "Double"
+            "fieldType": "Double",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
         },
         {
             "fieldName": "valueForPensionersSL",
-            "fieldType": "Double"
+            "fieldType": "Double",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
         },
         {
             "fieldName": "valueForChildrenSL",
-            "fieldType": "Double"
+            "fieldType": "Double",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
         }
     ],
     "relationships": [
@@ -35,8 +68,8 @@
             "relationshipType": "one-to-one",
             "otherEntityName": "document",
             "otherEntityRelationshipName": "subsistence",
-            "relationshipName": "document",
-            "otherEntityField": "id",
+            "relationshipName": "doc",
+            "otherEntityField": "docName",
             "ownerSide": true
         },
         {
@@ -52,8 +85,8 @@
     "entityTableName": "subsistence",
     "dto": "no",
     "pagination": "pagination",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "readOnly": false,
     "clientRootFolder": "",

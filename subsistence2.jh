@@ -1,0 +1,43 @@
+/**
+ * The Region entity.
+ */
+entity Region {
+	regionName String required maxlength(255),
+    regionCode String minlength(2) required maxlength(10)
+}
+/**
+ * The Subsistence entity.
+ */
+entity Subsistence {
+	yearSL String required minlength(4) maxlength(10),
+    quarterSL Integer required min(1) max(4),
+    dateAcceptSL Instant required,
+    valuePerCapitaSL Double min(0),
+    valueForCapableSL Double min(0),
+    valueForPensionersSL Double min(0),
+    valueForChildrenSL Double min(0) 
+}
+/**
+ * The Document entity.
+ */
+entity Document {
+	docName String required maxlength(255),
+    docDate Instant,
+    docBlob Blob
+}
+
+relationship OneToOne {
+Subsistence{doc(docName)} to Document
+}
+
+relationship ManyToOne {
+Subsistence{region(regionName)} to Region
+}
+
+
+filter Region, Subsistence, Document
+
+paginate Region, Document with infinite-scroll
+paginate Subsistence with pagination
+
+service all with serviceImpl except Region, Subsistence, Document

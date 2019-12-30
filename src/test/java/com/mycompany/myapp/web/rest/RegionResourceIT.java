@@ -4,7 +4,10 @@ import com.mycompany.myapp.JhipsterSampleApplicationApp;
 import com.mycompany.myapp.domain.Region;
 import com.mycompany.myapp.repository.RegionRepository;
 import com.mycompany.myapp.repository.search.RegionSearchRepository;
+import com.mycompany.myapp.service.RegionService;
 import com.mycompany.myapp.web.rest.errors.ExceptionTranslator;
+import com.mycompany.myapp.service.dto.RegionCriteria;
+import com.mycompany.myapp.service.RegionQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +51,9 @@ public class RegionResourceIT {
     @Autowired
     private RegionRepository regionRepository;
 
+    @Autowired
+    private RegionService regionService;
+
     /**
      * This repository is mocked in the com.mycompany.myapp.repository.search test package.
      *
@@ -55,6 +61,9 @@ public class RegionResourceIT {
      */
     @Autowired
     private RegionSearchRepository mockRegionSearchRepository;
+
+    @Autowired
+    private RegionQueryService regionQueryService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -78,7 +87,7 @@ public class RegionResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final RegionResource regionResource = new RegionResource(regionRepository, mockRegionSearchRepository);
+        final RegionResource regionResource = new RegionResource(regionService, regionQueryService);
         this.restRegionMockMvc = MockMvcBuilders.standaloneSetup(regionResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -164,6 +173,42 @@ public class RegionResourceIT {
 
     @Test
     @Transactional
+    public void checkRegionNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = regionRepository.findAll().size();
+        // set the field null
+        region.setRegionName(null);
+
+        // Create the Region, which fails.
+
+        restRegionMockMvc.perform(post("/api/regions")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(region)))
+            .andExpect(status().isBadRequest());
+
+        List<Region> regionList = regionRepository.findAll();
+        assertThat(regionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkRegionCodeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = regionRepository.findAll().size();
+        // set the field null
+        region.setRegionCode(null);
+
+        // Create the Region, which fails.
+
+        restRegionMockMvc.perform(post("/api/regions")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(region)))
+            .andExpect(status().isBadRequest());
+
+        List<Region> regionList = regionRepository.findAll();
+        assertThat(regionList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllRegions() throws Exception {
         // Initialize the database
         regionRepository.saveAndFlush(region);
@@ -192,6 +237,217 @@ public class RegionResourceIT {
             .andExpect(jsonPath("$.regionCode").value(DEFAULT_REGION_CODE));
     }
 
+
+    @Test
+    @Transactional
+    public void getRegionsByIdFiltering() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        Long id = region.getId();
+
+        defaultRegionShouldBeFound("id.equals=" + id);
+        defaultRegionShouldNotBeFound("id.notEquals=" + id);
+
+        defaultRegionShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultRegionShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultRegionShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultRegionShouldNotBeFound("id.lessThan=" + id);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionName equals to DEFAULT_REGION_NAME
+        defaultRegionShouldBeFound("regionName.equals=" + DEFAULT_REGION_NAME);
+
+        // Get all the regionList where regionName equals to UPDATED_REGION_NAME
+        defaultRegionShouldNotBeFound("regionName.equals=" + UPDATED_REGION_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionName not equals to DEFAULT_REGION_NAME
+        defaultRegionShouldNotBeFound("regionName.notEquals=" + DEFAULT_REGION_NAME);
+
+        // Get all the regionList where regionName not equals to UPDATED_REGION_NAME
+        defaultRegionShouldBeFound("regionName.notEquals=" + UPDATED_REGION_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionName in DEFAULT_REGION_NAME or UPDATED_REGION_NAME
+        defaultRegionShouldBeFound("regionName.in=" + DEFAULT_REGION_NAME + "," + UPDATED_REGION_NAME);
+
+        // Get all the regionList where regionName equals to UPDATED_REGION_NAME
+        defaultRegionShouldNotBeFound("regionName.in=" + UPDATED_REGION_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionName is not null
+        defaultRegionShouldBeFound("regionName.specified=true");
+
+        // Get all the regionList where regionName is null
+        defaultRegionShouldNotBeFound("regionName.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllRegionsByRegionNameContainsSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionName contains DEFAULT_REGION_NAME
+        defaultRegionShouldBeFound("regionName.contains=" + DEFAULT_REGION_NAME);
+
+        // Get all the regionList where regionName contains UPDATED_REGION_NAME
+        defaultRegionShouldNotBeFound("regionName.contains=" + UPDATED_REGION_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionName does not contain DEFAULT_REGION_NAME
+        defaultRegionShouldNotBeFound("regionName.doesNotContain=" + DEFAULT_REGION_NAME);
+
+        // Get all the regionList where regionName does not contain UPDATED_REGION_NAME
+        defaultRegionShouldBeFound("regionName.doesNotContain=" + UPDATED_REGION_NAME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionCodeIsEqualToSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionCode equals to DEFAULT_REGION_CODE
+        defaultRegionShouldBeFound("regionCode.equals=" + DEFAULT_REGION_CODE);
+
+        // Get all the regionList where regionCode equals to UPDATED_REGION_CODE
+        defaultRegionShouldNotBeFound("regionCode.equals=" + UPDATED_REGION_CODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionCodeIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionCode not equals to DEFAULT_REGION_CODE
+        defaultRegionShouldNotBeFound("regionCode.notEquals=" + DEFAULT_REGION_CODE);
+
+        // Get all the regionList where regionCode not equals to UPDATED_REGION_CODE
+        defaultRegionShouldBeFound("regionCode.notEquals=" + UPDATED_REGION_CODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionCodeIsInShouldWork() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionCode in DEFAULT_REGION_CODE or UPDATED_REGION_CODE
+        defaultRegionShouldBeFound("regionCode.in=" + DEFAULT_REGION_CODE + "," + UPDATED_REGION_CODE);
+
+        // Get all the regionList where regionCode equals to UPDATED_REGION_CODE
+        defaultRegionShouldNotBeFound("regionCode.in=" + UPDATED_REGION_CODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionCodeIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionCode is not null
+        defaultRegionShouldBeFound("regionCode.specified=true");
+
+        // Get all the regionList where regionCode is null
+        defaultRegionShouldNotBeFound("regionCode.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllRegionsByRegionCodeContainsSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionCode contains DEFAULT_REGION_CODE
+        defaultRegionShouldBeFound("regionCode.contains=" + DEFAULT_REGION_CODE);
+
+        // Get all the regionList where regionCode contains UPDATED_REGION_CODE
+        defaultRegionShouldNotBeFound("regionCode.contains=" + UPDATED_REGION_CODE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllRegionsByRegionCodeNotContainsSomething() throws Exception {
+        // Initialize the database
+        regionRepository.saveAndFlush(region);
+
+        // Get all the regionList where regionCode does not contain DEFAULT_REGION_CODE
+        defaultRegionShouldNotBeFound("regionCode.doesNotContain=" + DEFAULT_REGION_CODE);
+
+        // Get all the regionList where regionCode does not contain UPDATED_REGION_CODE
+        defaultRegionShouldBeFound("regionCode.doesNotContain=" + UPDATED_REGION_CODE);
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultRegionShouldBeFound(String filter) throws Exception {
+        restRegionMockMvc.perform(get("/api/regions?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(region.getId().intValue())))
+            .andExpect(jsonPath("$.[*].regionName").value(hasItem(DEFAULT_REGION_NAME)))
+            .andExpect(jsonPath("$.[*].regionCode").value(hasItem(DEFAULT_REGION_CODE)));
+
+        // Check, that the count call also returns 1
+        restRegionMockMvc.perform(get("/api/regions/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultRegionShouldNotBeFound(String filter) throws Exception {
+        restRegionMockMvc.perform(get("/api/regions?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restRegionMockMvc.perform(get("/api/regions/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
+
     @Test
     @Transactional
     public void getNonExistingRegion() throws Exception {
@@ -204,7 +460,9 @@ public class RegionResourceIT {
     @Transactional
     public void updateRegion() throws Exception {
         // Initialize the database
-        regionRepository.saveAndFlush(region);
+        regionService.save(region);
+        // As the test used the service layer, reset the Elasticsearch mock repository
+        reset(mockRegionSearchRepository);
 
         int databaseSizeBeforeUpdate = regionRepository.findAll().size();
 
@@ -257,7 +515,7 @@ public class RegionResourceIT {
     @Transactional
     public void deleteRegion() throws Exception {
         // Initialize the database
-        regionRepository.saveAndFlush(region);
+        regionService.save(region);
 
         int databaseSizeBeforeDelete = regionRepository.findAll().size();
 
@@ -278,7 +536,7 @@ public class RegionResourceIT {
     @Transactional
     public void searchRegion() throws Exception {
         // Initialize the database
-        regionRepository.saveAndFlush(region);
+        regionService.save(region);
         when(mockRegionSearchRepository.search(queryStringQuery("id:" + region.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(region), PageRequest.of(0, 1), 1));
         // Search the region

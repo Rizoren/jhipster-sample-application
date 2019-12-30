@@ -1,5 +1,4 @@
 import { Moment } from 'moment';
-import { ISubsistence } from 'app/shared/model/subsistence.model';
 
 export interface IDocument {
   id?: number;
@@ -7,7 +6,6 @@ export interface IDocument {
   docDate?: Moment;
   docBlobContentType?: string;
   docBlob?: any;
-  subsistence?: ISubsistence;
 }
 
 export class Document implements IDocument {
@@ -16,7 +14,6 @@ export class Document implements IDocument {
     public docName?: string,
     public docDate?: Moment,
     public docBlobContentType?: string,
-    public docBlob?: any,
-    public subsistence?: ISubsistence
+    public docBlob?: any
   ) {}
 }

@@ -4,7 +4,10 @@ import com.mycompany.myapp.JhipsterSampleApplicationApp;
 import com.mycompany.myapp.domain.Document;
 import com.mycompany.myapp.repository.DocumentRepository;
 import com.mycompany.myapp.repository.search.DocumentSearchRepository;
+import com.mycompany.myapp.service.DocumentService;
 import com.mycompany.myapp.web.rest.errors.ExceptionTranslator;
+import com.mycompany.myapp.service.dto.DocumentCriteria;
+import com.mycompany.myapp.service.DocumentQueryService;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,6 +59,9 @@ public class DocumentResourceIT {
     @Autowired
     private DocumentRepository documentRepository;
 
+    @Autowired
+    private DocumentService documentService;
+
     /**
      * This repository is mocked in the com.mycompany.myapp.repository.search test package.
      *
@@ -63,6 +69,9 @@ public class DocumentResourceIT {
      */
     @Autowired
     private DocumentSearchRepository mockDocumentSearchRepository;
+
+    @Autowired
+    private DocumentQueryService documentQueryService;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -86,7 +95,7 @@ public class DocumentResourceIT {
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        final DocumentResource documentResource = new DocumentResource(documentRepository, mockDocumentSearchRepository);
+        final DocumentResource documentResource = new DocumentResource(documentService, documentQueryService);
         this.restDocumentMockMvc = MockMvcBuilders.standaloneSetup(documentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
@@ -178,6 +187,24 @@ public class DocumentResourceIT {
 
     @Test
     @Transactional
+    public void checkDocNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = documentRepository.findAll().size();
+        // set the field null
+        document.setDocName(null);
+
+        // Create the Document, which fails.
+
+        restDocumentMockMvc.perform(post("/api/documents")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(document)))
+            .andExpect(status().isBadRequest());
+
+        List<Document> documentList = documentRepository.findAll();
+        assertThat(documentList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllDocuments() throws Exception {
         // Initialize the database
         documentRepository.saveAndFlush(document);
@@ -210,6 +237,193 @@ public class DocumentResourceIT {
             .andExpect(jsonPath("$.docBlob").value(Base64Utils.encodeToString(DEFAULT_DOC_BLOB)));
     }
 
+
+    @Test
+    @Transactional
+    public void getDocumentsByIdFiltering() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        Long id = document.getId();
+
+        defaultDocumentShouldBeFound("id.equals=" + id);
+        defaultDocumentShouldNotBeFound("id.notEquals=" + id);
+
+        defaultDocumentShouldBeFound("id.greaterThanOrEqual=" + id);
+        defaultDocumentShouldNotBeFound("id.greaterThan=" + id);
+
+        defaultDocumentShouldBeFound("id.lessThanOrEqual=" + id);
+        defaultDocumentShouldNotBeFound("id.lessThan=" + id);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocNameIsEqualToSomething() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docName equals to DEFAULT_DOC_NAME
+        defaultDocumentShouldBeFound("docName.equals=" + DEFAULT_DOC_NAME);
+
+        // Get all the documentList where docName equals to UPDATED_DOC_NAME
+        defaultDocumentShouldNotBeFound("docName.equals=" + UPDATED_DOC_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocNameIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docName not equals to DEFAULT_DOC_NAME
+        defaultDocumentShouldNotBeFound("docName.notEquals=" + DEFAULT_DOC_NAME);
+
+        // Get all the documentList where docName not equals to UPDATED_DOC_NAME
+        defaultDocumentShouldBeFound("docName.notEquals=" + UPDATED_DOC_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocNameIsInShouldWork() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docName in DEFAULT_DOC_NAME or UPDATED_DOC_NAME
+        defaultDocumentShouldBeFound("docName.in=" + DEFAULT_DOC_NAME + "," + UPDATED_DOC_NAME);
+
+        // Get all the documentList where docName equals to UPDATED_DOC_NAME
+        defaultDocumentShouldNotBeFound("docName.in=" + UPDATED_DOC_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocNameIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docName is not null
+        defaultDocumentShouldBeFound("docName.specified=true");
+
+        // Get all the documentList where docName is null
+        defaultDocumentShouldNotBeFound("docName.specified=false");
+    }
+                @Test
+    @Transactional
+    public void getAllDocumentsByDocNameContainsSomething() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docName contains DEFAULT_DOC_NAME
+        defaultDocumentShouldBeFound("docName.contains=" + DEFAULT_DOC_NAME);
+
+        // Get all the documentList where docName contains UPDATED_DOC_NAME
+        defaultDocumentShouldNotBeFound("docName.contains=" + UPDATED_DOC_NAME);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocNameNotContainsSomething() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docName does not contain DEFAULT_DOC_NAME
+        defaultDocumentShouldNotBeFound("docName.doesNotContain=" + DEFAULT_DOC_NAME);
+
+        // Get all the documentList where docName does not contain UPDATED_DOC_NAME
+        defaultDocumentShouldBeFound("docName.doesNotContain=" + UPDATED_DOC_NAME);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocDateIsEqualToSomething() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docDate equals to DEFAULT_DOC_DATE
+        defaultDocumentShouldBeFound("docDate.equals=" + DEFAULT_DOC_DATE);
+
+        // Get all the documentList where docDate equals to UPDATED_DOC_DATE
+        defaultDocumentShouldNotBeFound("docDate.equals=" + UPDATED_DOC_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocDateIsNotEqualToSomething() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docDate not equals to DEFAULT_DOC_DATE
+        defaultDocumentShouldNotBeFound("docDate.notEquals=" + DEFAULT_DOC_DATE);
+
+        // Get all the documentList where docDate not equals to UPDATED_DOC_DATE
+        defaultDocumentShouldBeFound("docDate.notEquals=" + UPDATED_DOC_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocDateIsInShouldWork() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docDate in DEFAULT_DOC_DATE or UPDATED_DOC_DATE
+        defaultDocumentShouldBeFound("docDate.in=" + DEFAULT_DOC_DATE + "," + UPDATED_DOC_DATE);
+
+        // Get all the documentList where docDate equals to UPDATED_DOC_DATE
+        defaultDocumentShouldNotBeFound("docDate.in=" + UPDATED_DOC_DATE);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDocumentsByDocDateIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        documentRepository.saveAndFlush(document);
+
+        // Get all the documentList where docDate is not null
+        defaultDocumentShouldBeFound("docDate.specified=true");
+
+        // Get all the documentList where docDate is null
+        defaultDocumentShouldNotBeFound("docDate.specified=false");
+    }
+    /**
+     * Executes the search, and checks that the default entity is returned.
+     */
+    private void defaultDocumentShouldBeFound(String filter) throws Exception {
+        restDocumentMockMvc.perform(get("/api/documents?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(document.getId().intValue())))
+            .andExpect(jsonPath("$.[*].docName").value(hasItem(DEFAULT_DOC_NAME)))
+            .andExpect(jsonPath("$.[*].docDate").value(hasItem(DEFAULT_DOC_DATE.toString())))
+            .andExpect(jsonPath("$.[*].docBlobContentType").value(hasItem(DEFAULT_DOC_BLOB_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].docBlob").value(hasItem(Base64Utils.encodeToString(DEFAULT_DOC_BLOB))));
+
+        // Check, that the count call also returns 1
+        restDocumentMockMvc.perform(get("/api/documents/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("1"));
+    }
+
+    /**
+     * Executes the search, and checks that the default entity is not returned.
+     */
+    private void defaultDocumentShouldNotBeFound(String filter) throws Exception {
+        restDocumentMockMvc.perform(get("/api/documents?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$").isEmpty());
+
+        // Check, that the count call also returns 0
+        restDocumentMockMvc.perform(get("/api/documents/count?sort=id,desc&" + filter))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(content().string("0"));
+    }
+
+
     @Test
     @Transactional
     public void getNonExistingDocument() throws Exception {
@@ -222,7 +436,9 @@ public class DocumentResourceIT {
     @Transactional
     public void updateDocument() throws Exception {
         // Initialize the database
-        documentRepository.saveAndFlush(document);
+        documentService.save(document);
+        // As the test used the service layer, reset the Elasticsearch mock repository
+        reset(mockDocumentSearchRepository);
 
         int databaseSizeBeforeUpdate = documentRepository.findAll().size();
 
@@ -279,7 +495,7 @@ public class DocumentResourceIT {
     @Transactional
     public void deleteDocument() throws Exception {
         // Initialize the database
-        documentRepository.saveAndFlush(document);
+        documentService.save(document);
 
         int databaseSizeBeforeDelete = documentRepository.findAll().size();
 
@@ -300,7 +516,7 @@ public class DocumentResourceIT {
     @Transactional
     public void searchDocument() throws Exception {
         // Initialize the database
-        documentRepository.saveAndFlush(document);
+        documentService.save(document);
         when(mockDocumentSearchRepository.search(queryStringQuery("id:" + document.getId()), PageRequest.of(0, 20)))
             .thenReturn(new PageImpl<>(Collections.singletonList(document), PageRequest.of(0, 1), 1));
         // Search the document

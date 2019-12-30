@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
@@ -26,10 +27,14 @@ public class Region implements Serializable {
     @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Keyword)
     private Long id;
 
-    @Column(name = "region_name")
+    @NotNull
+    @Size(max = 255)
+    @Column(name = "region_name", length = 255, nullable = false)
     private String regionName;
 
-    @Column(name = "region_code")
+    @NotNull
+    @Size(min = 2, max = 10)
+    @Column(name = "region_code", length = 10, nullable = false)
     private String regionCode;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

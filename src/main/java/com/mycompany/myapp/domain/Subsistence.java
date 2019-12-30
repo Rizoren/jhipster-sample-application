@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.io.Serializable;
@@ -28,30 +29,40 @@ public class Subsistence implements Serializable {
     @org.springframework.data.elasticsearch.annotations.Field(type = FieldType.Keyword)
     private Long id;
 
-    @Column(name = "year_sl")
-    private Integer yearSL;
+    @NotNull
+    @Size(min = 4, max = 10)
+    @Column(name = "year_sl", length = 10, nullable = false)
+    private String yearSL;
 
-    @Column(name = "quarter_sl")
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 4)
+    @Column(name = "quarter_sl", nullable = false)
     private Integer quarterSL;
 
-    @Column(name = "date_accept_sl")
+    @NotNull
+    @Column(name = "date_accept_sl", nullable = false)
     private Instant dateAcceptSL;
 
+    @DecimalMin(value = "0")
     @Column(name = "value_per_capita_sl")
     private Double valuePerCapitaSL;
 
+    @DecimalMin(value = "0")
     @Column(name = "value_for_capable_sl")
     private Double valueForCapableSL;
 
+    @DecimalMin(value = "0")
     @Column(name = "value_for_pensioners_sl")
     private Double valueForPensionersSL;
 
+    @DecimalMin(value = "0")
     @Column(name = "value_for_children_sl")
     private Double valueForChildrenSL;
 
     @OneToOne
     @JoinColumn(unique = true)
-    private Document document;
+    private Document doc;
 
     @ManyToOne
     @JsonIgnoreProperties("subsistences")
@@ -66,16 +77,16 @@ public class Subsistence implements Serializable {
         this.id = id;
     }
 
-    public Integer getYearSL() {
+    public String getYearSL() {
         return yearSL;
     }
 
-    public Subsistence yearSL(Integer yearSL) {
+    public Subsistence yearSL(String yearSL) {
         this.yearSL = yearSL;
         return this;
     }
 
-    public void setYearSL(Integer yearSL) {
+    public void setYearSL(String yearSL) {
         this.yearSL = yearSL;
     }
 
@@ -157,17 +168,17 @@ public class Subsistence implements Serializable {
         this.valueForChildrenSL = valueForChildrenSL;
     }
 
-    public Document getDocument() {
-        return document;
+    public Document getDoc() {
+        return doc;
     }
 
-    public Subsistence document(Document document) {
-        this.document = document;
+    public Subsistence doc(Document document) {
+        this.doc = document;
         return this;
     }
 
-    public void setDocument(Document document) {
-        this.document = document;
+    public void setDoc(Document document) {
+        this.doc = document;
     }
 
     public Region getRegion() {
@@ -204,7 +215,7 @@ public class Subsistence implements Serializable {
     public String toString() {
         return "Subsistence{" +
             "id=" + getId() +
-            ", yearSL=" + getYearSL() +
+            ", yearSL='" + getYearSL() + "'" +
             ", quarterSL=" + getQuarterSL() +
             ", dateAcceptSL='" + getDateAcceptSL() + "'" +
             ", valuePerCapitaSL=" + getValuePerCapitaSL() +
