@@ -37,7 +37,6 @@ Subsistence{region(regionName)} to Region
 
 filter Region, Subsistence, Document
 
-paginate Region, Document with infinite-scroll
 paginate Subsistence with pagination
 
 service all with serviceImpl except Region, Subsistence, Document
