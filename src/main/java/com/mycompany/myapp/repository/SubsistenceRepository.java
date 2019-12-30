@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface SubsistenceRepository extends JpaRepository<Subsistence, Long> {
+public interface SubsistenceRepository extends JpaRepository<Subsistence, Long>, JpaSpecificationExecutor<Subsistence> {
 
 }

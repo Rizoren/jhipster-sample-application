@@ -24,7 +24,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Subsistence(0, 0, 0, currentDate, 0, 0, 0, 0);
+      elemDefault = new Subsistence(0, 'AAAAAAA', 0, currentDate, 0, 0, 0, 0);
     });
 
     describe('Service methods', () => {
@@ -71,7 +71,7 @@ describe('Service Tests', () => {
       it('should update a Subsistence', () => {
         const returnedFromService = Object.assign(
           {
-            yearSL: 1,
+            yearSL: 'BBBBBB',
             quarterSL: 1,
             dateAcceptSL: currentDate.format(DATE_TIME_FORMAT),
             valuePerCapitaSL: 1,
@@ -100,7 +100,7 @@ describe('Service Tests', () => {
       it('should return a list of Subsistence', () => {
         const returnedFromService = Object.assign(
           {
-            yearSL: 1,
+            yearSL: 'BBBBBB',
             quarterSL: 1,
             dateAcceptSL: currentDate.format(DATE_TIME_FORMAT),
             valuePerCapitaSL: 1,

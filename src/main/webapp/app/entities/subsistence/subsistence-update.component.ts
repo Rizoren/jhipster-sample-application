@@ -24,20 +24,20 @@ type SelectableEntity = IDocument | IRegion;
 export class SubsistenceUpdateComponent implements OnInit {
   isSaving = false;
 
-  documents: IDocument[] = [];
+  docs: IDocument[] = [];
 
   regions: IRegion[] = [];
 
   editForm = this.fb.group({
     id: [],
-    yearSL: [],
-    quarterSL: [],
-    dateAcceptSL: [],
-    valuePerCapitaSL: [],
-    valueForCapableSL: [],
-    valueForPensionersSL: [],
-    valueForChildrenSL: [],
-    document: [],
+    yearSL: [null, [Validators.required, Validators.minLength(4), Validators.maxLength(10)]],
+    quarterSL: [null, [Validators.required, Validators.min(1), Validators.max(4)]],
+    dateAcceptSL: [null, [Validators.required]],
+    valuePerCapitaSL: [null, [Validators.min(0)]],
+    valueForCapableSL: [null, [Validators.min(0)]],
+    valueForPensionersSL: [null, [Validators.min(0)]],
+    valueForChildrenSL: [null, [Validators.min(0)]],
+    doc: [],
     region: []
   });
 
@@ -54,25 +54,25 @@ export class SubsistenceUpdateComponent implements OnInit {
       this.updateForm(subsistence);
 
       this.documentService
-        .query({ filter: 'subsistence-is-null' })
+        .query({ 'subsistenceId.specified': 'false' })
         .pipe(
           map((res: HttpResponse<IDocument[]>) => {
             return res.body ? res.body : [];
           })
         )
         .subscribe((resBody: IDocument[]) => {
-          if (!subsistence.document || !subsistence.document.id) {
-            this.documents = resBody;
+          if (!subsistence.doc || !subsistence.doc.id) {
+            this.docs = resBody;
           } else {
             this.documentService
-              .find(subsistence.document.id)
+              .find(subsistence.doc.id)
               .pipe(
                 map((subRes: HttpResponse<IDocument>) => {
                   return subRes.body ? [subRes.body].concat(resBody) : resBody;
                 })
               )
               .subscribe((concatRes: IDocument[]) => {
-                this.documents = concatRes;
+                this.docs = concatRes;
               });
           }
         });
@@ -98,7 +98,7 @@ export class SubsistenceUpdateComponent implements OnInit {
       valueForCapableSL: subsistence.valueForCapableSL,
       valueForPensionersSL: subsistence.valueForPensionersSL,
       valueForChildrenSL: subsistence.valueForChildrenSL,
-      document: subsistence.document,
+      doc: subsistence.doc,
       region: subsistence.region
     });
   }
@@ -131,7 +131,7 @@ export class SubsistenceUpdateComponent implements OnInit {
       valueForCapableSL: this.editForm.get(['valueForCapableSL'])!.value,
       valueForPensionersSL: this.editForm.get(['valueForPensionersSL'])!.value,
       valueForChildrenSL: this.editForm.get(['valueForChildrenSL'])!.value,
-      document: this.editForm.get(['document'])!.value,
+      doc: this.editForm.get(['doc'])!.value,
       region: this.editForm.get(['region'])!.value
     };
   }

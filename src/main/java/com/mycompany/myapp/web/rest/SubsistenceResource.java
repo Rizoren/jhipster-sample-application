@@ -1,9 +1,10 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Subsistence;
-import com.mycompany.myapp.repository.SubsistenceRepository;
-import com.mycompany.myapp.repository.search.SubsistenceSearchRepository;
+import com.mycompany.myapp.service.SubsistenceService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import com.mycompany.myapp.service.dto.SubsistenceCriteria;
+import com.mycompany.myapp.service.SubsistenceQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -17,15 +18,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional; 
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -35,7 +35,6 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class SubsistenceResource {
 
     private final Logger log = LoggerFactory.getLogger(SubsistenceResource.class);
@@ -45,13 +44,13 @@ public class SubsistenceResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final SubsistenceRepository subsistenceRepository;
+    private final SubsistenceService subsistenceService;
 
-    private final SubsistenceSearchRepository subsistenceSearchRepository;
+    private final SubsistenceQueryService subsistenceQueryService;
 
-    public SubsistenceResource(SubsistenceRepository subsistenceRepository, SubsistenceSearchRepository subsistenceSearchRepository) {
-        this.subsistenceRepository = subsistenceRepository;
-        this.subsistenceSearchRepository = subsistenceSearchRepository;
+    public SubsistenceResource(SubsistenceService subsistenceService, SubsistenceQueryService subsistenceQueryService) {
+        this.subsistenceService = subsistenceService;
+        this.subsistenceQueryService = subsistenceQueryService;
     }
 
     /**
@@ -62,13 +61,12 @@ public class SubsistenceResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/subsistences")
-    public ResponseEntity<Subsistence> createSubsistence(@RequestBody Subsistence subsistence) throws URISyntaxException {
+    public ResponseEntity<Subsistence> createSubsistence(@Valid @RequestBody Subsistence subsistence) throws URISyntaxException {
         log.debug("REST request to save Subsistence : {}", subsistence);
         if (subsistence.getId() != null) {
             throw new BadRequestAlertException("A new subsistence cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Subsistence result = subsistenceRepository.save(subsistence);
-        subsistenceSearchRepository.save(result);
+        Subsistence result = subsistenceService.save(subsistence);
         return ResponseEntity.created(new URI("/api/subsistences/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -84,13 +82,12 @@ public class SubsistenceResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/subsistences")
-    public ResponseEntity<Subsistence> updateSubsistence(@RequestBody Subsistence subsistence) throws URISyntaxException {
+    public ResponseEntity<Subsistence> updateSubsistence(@Valid @RequestBody Subsistence subsistence) throws URISyntaxException {
         log.debug("REST request to update Subsistence : {}", subsistence);
         if (subsistence.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Subsistence result = subsistenceRepository.save(subsistence);
-        subsistenceSearchRepository.save(result);
+        Subsistence result = subsistenceService.save(subsistence);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, subsistence.getId().toString()))
             .body(result);
@@ -102,14 +99,27 @@ public class SubsistenceResource {
 
      * @param pageable the pagination information.
 
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of subsistences in body.
      */
     @GetMapping("/subsistences")
-    public ResponseEntity<List<Subsistence>> getAllSubsistences(Pageable pageable) {
-        log.debug("REST request to get a page of Subsistences");
-        Page<Subsistence> page = subsistenceRepository.findAll(pageable);
+    public ResponseEntity<List<Subsistence>> getAllSubsistences(SubsistenceCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Subsistences by criteria: {}", criteria);
+        Page<Subsistence> page = subsistenceQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+    * {@code GET  /subsistences/count} : count all the subsistences.
+    *
+    * @param criteria the criteria which the requested entities should match.
+    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+    */
+    @GetMapping("/subsistences/count")
+    public ResponseEntity<Long> countSubsistences(SubsistenceCriteria criteria) {
+        log.debug("REST request to count Subsistences by criteria: {}", criteria);
+        return ResponseEntity.ok().body(subsistenceQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -121,7 +131,7 @@ public class SubsistenceResource {
     @GetMapping("/subsistences/{id}")
     public ResponseEntity<Subsistence> getSubsistence(@PathVariable Long id) {
         log.debug("REST request to get Subsistence : {}", id);
-        Optional<Subsistence> subsistence = subsistenceRepository.findById(id);
+        Optional<Subsistence> subsistence = subsistenceService.findOne(id);
         return ResponseUtil.wrapOrNotFound(subsistence);
     }
 
@@ -134,8 +144,7 @@ public class SubsistenceResource {
     @DeleteMapping("/subsistences/{id}")
     public ResponseEntity<Void> deleteSubsistence(@PathVariable Long id) {
         log.debug("REST request to delete Subsistence : {}", id);
-        subsistenceRepository.deleteById(id);
-        subsistenceSearchRepository.deleteById(id);
+        subsistenceService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 
@@ -150,7 +159,7 @@ public class SubsistenceResource {
     @GetMapping("/_search/subsistences")
     public ResponseEntity<List<Subsistence>> searchSubsistences(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Subsistences for query {}", query);
-        Page<Subsistence> page = subsistenceSearchRepository.search(queryStringQuery(query), pageable);
+        Page<Subsistence> page = subsistenceService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

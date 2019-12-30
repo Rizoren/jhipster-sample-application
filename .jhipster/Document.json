@@ -3,7 +3,12 @@
     "fields": [
         {
             "fieldName": "docName",
-            "fieldType": "String"
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 255
         },
         {
             "fieldName": "docDate",
@@ -15,22 +20,14 @@
             "fieldTypeBlobContent": "any"
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "one-to-one",
-            "otherEntityName": "subsistence",
-            "otherEntityRelationshipName": "document",
-            "relationshipName": "subsistence",
-            "ownerSide": false
-        }
-    ],
+    "relationships": [],
     "changelogDate": "20191230070951",
     "javadoc": "The Document entity.",
     "entityTableName": "document",
     "dto": "no",
     "pagination": "infinite-scroll",
-    "service": "no",
-    "jpaMetamodelFiltering": false,
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
     "fluentMethods": true,
     "readOnly": false,
     "clientRootFolder": "",

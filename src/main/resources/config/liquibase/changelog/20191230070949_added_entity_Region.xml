@@ -16,10 +16,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="region_name" type="varchar(255)">
-                <constraints nullable="true" />
+                <constraints nullable="false" />
             </column>
-            <column name="region_code" type="varchar(255)">
-                <constraints nullable="true" />
+            <column name="region_code" type="varchar(10)">
+                <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>

@@ -4,28 +4,28 @@ import { IRegion } from 'app/shared/model/region.model';
 
 export interface ISubsistence {
   id?: number;
-  yearSL?: number;
+  yearSL?: string;
   quarterSL?: number;
   dateAcceptSL?: Moment;
   valuePerCapitaSL?: number;
   valueForCapableSL?: number;
   valueForPensionersSL?: number;
   valueForChildrenSL?: number;
-  document?: IDocument;
+  doc?: IDocument;
   region?: IRegion;
 }
 
 export class Subsistence implements ISubsistence {
   constructor(
     public id?: number,
-    public yearSL?: number,
+    public yearSL?: string,
     public quarterSL?: number,
     public dateAcceptSL?: Moment,
     public valuePerCapitaSL?: number,
     public valueForCapableSL?: number,
     public valueForPensionersSL?: number,
     public valueForChildrenSL?: number,
-    public document?: IDocument,
+    public doc?: IDocument,
     public region?: IRegion
   ) {}
 }

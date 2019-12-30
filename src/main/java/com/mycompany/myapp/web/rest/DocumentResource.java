@@ -1,9 +1,10 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Document;
-import com.mycompany.myapp.repository.DocumentRepository;
-import com.mycompany.myapp.repository.search.DocumentSearchRepository;
+import com.mycompany.myapp.service.DocumentService;
 import com.mycompany.myapp.web.rest.errors.BadRequestAlertException;
+import com.mycompany.myapp.service.dto.DocumentCriteria;
+import com.mycompany.myapp.service.DocumentQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
@@ -17,15 +18,14 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional; 
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -35,7 +35,6 @@ import static org.elasticsearch.index.query.QueryBuilders.*;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class DocumentResource {
 
     private final Logger log = LoggerFactory.getLogger(DocumentResource.class);
@@ -45,13 +44,13 @@ public class DocumentResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
-    private final DocumentRepository documentRepository;
+    private final DocumentService documentService;
 
-    private final DocumentSearchRepository documentSearchRepository;
+    private final DocumentQueryService documentQueryService;
 
-    public DocumentResource(DocumentRepository documentRepository, DocumentSearchRepository documentSearchRepository) {
-        this.documentRepository = documentRepository;
-        this.documentSearchRepository = documentSearchRepository;
+    public DocumentResource(DocumentService documentService, DocumentQueryService documentQueryService) {
+        this.documentService = documentService;
+        this.documentQueryService = documentQueryService;
     }
 
     /**
@@ -62,13 +61,12 @@ public class DocumentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/documents")
-    public ResponseEntity<Document> createDocument(@RequestBody Document document) throws URISyntaxException {
+    public ResponseEntity<Document> createDocument(@Valid @RequestBody Document document) throws URISyntaxException {
         log.debug("REST request to save Document : {}", document);
         if (document.getId() != null) {
             throw new BadRequestAlertException("A new document cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Document result = documentRepository.save(document);
-        documentSearchRepository.save(result);
+        Document result = documentService.save(document);
         return ResponseEntity.created(new URI("/api/documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -84,13 +82,12 @@ public class DocumentResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/documents")
-    public ResponseEntity<Document> updateDocument(@RequestBody Document document) throws URISyntaxException {
+    public ResponseEntity<Document> updateDocument(@Valid @RequestBody Document document) throws URISyntaxException {
         log.debug("REST request to update Document : {}", document);
         if (document.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
-        Document result = documentRepository.save(document);
-        documentSearchRepository.save(result);
+        Document result = documentService.save(document);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, document.getId().toString()))
             .body(result);
@@ -102,22 +99,27 @@ public class DocumentResource {
 
      * @param pageable the pagination information.
 
-     * @param filter the filter of the request.
+     * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of documents in body.
      */
     @GetMapping("/documents")
-    public ResponseEntity<List<Document>> getAllDocuments(Pageable pageable, @RequestParam(required = false) String filter) {
-        if ("subsistence-is-null".equals(filter)) {
-            log.debug("REST request to get all Documents where subsistence is null");
-            return new ResponseEntity<>(StreamSupport
-                .stream(documentRepository.findAll().spliterator(), false)
-                .filter(document -> document.getSubsistence() == null)
-                .collect(Collectors.toList()), HttpStatus.OK);
-        }
-        log.debug("REST request to get a page of Documents");
-        Page<Document> page = documentRepository.findAll(pageable);
+    public ResponseEntity<List<Document>> getAllDocuments(DocumentCriteria criteria, Pageable pageable) {
+        log.debug("REST request to get Documents by criteria: {}", criteria);
+        Page<Document> page = documentQueryService.findByCriteria(criteria, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+    * {@code GET  /documents/count} : count all the documents.
+    *
+    * @param criteria the criteria which the requested entities should match.
+    * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the count in body.
+    */
+    @GetMapping("/documents/count")
+    public ResponseEntity<Long> countDocuments(DocumentCriteria criteria) {
+        log.debug("REST request to count Documents by criteria: {}", criteria);
+        return ResponseEntity.ok().body(documentQueryService.countByCriteria(criteria));
     }
 
     /**
@@ -129,7 +131,7 @@ public class DocumentResource {
     @GetMapping("/documents/{id}")
     public ResponseEntity<Document> getDocument(@PathVariable Long id) {
         log.debug("REST request to get Document : {}", id);
-        Optional<Document> document = documentRepository.findById(id);
+        Optional<Document> document = documentService.findOne(id);
         return ResponseUtil.wrapOrNotFound(document);
     }
 
@@ -142,8 +144,7 @@ public class DocumentResource {
     @DeleteMapping("/documents/{id}")
     public ResponseEntity<Void> deleteDocument(@PathVariable Long id) {
         log.debug("REST request to delete Document : {}", id);
-        documentRepository.deleteById(id);
-        documentSearchRepository.deleteById(id);
+        documentService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
 
@@ -158,7 +159,7 @@ public class DocumentResource {
     @GetMapping("/_search/documents")
     public ResponseEntity<List<Document>> searchDocuments(@RequestParam String query, Pageable pageable) {
         log.debug("REST request to search for a page of Documents for query {}", query);
-        Page<Document> page = documentSearchRepository.search(queryStringQuery(query), pageable);
+        Page<Document> page = documentService.search(query, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

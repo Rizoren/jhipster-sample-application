@@ -21,7 +21,7 @@ export class DocumentUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    docName: [],
+    docName: [null, [Validators.required, Validators.maxLength(255)]],
     docDate: [],
     docBlob: [],
     docBlobContentType: []
