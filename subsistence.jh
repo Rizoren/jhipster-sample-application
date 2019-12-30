@@ -1,0 +1,46 @@
+/**
+ * The Region entity.
+ */
+entity Region {
+	regionName String,
+    regionCode String
+}
+/**
+ * The Subsistence entity.
+ */
+entity Subsistence {
+	yearSL Integer,
+    quarterSL Integer,
+    dateAcceptSL Instant,
+    valuePerCapitaSL Double,
+    valueForCapableSL Double,
+    valueForPensionersSL Double,
+    valueForChildrenSL Double 
+}
+/**
+ * The Document entity.
+ */
+entity Document {
+	docName String,
+    docDate Instant,
+    docBlob Blob
+}
+
+relationship ManyToOne {
+Subsistence{subsistence(regionName)}
+to 
+Region
+}
+
+// Set pagination options
+paginate Region, Document with infinite-scroll
+paginate Subsistence with pagination
+
+// Use Data Transfert Objects (DTO)
+// dto * with mapstruct
+
+// Set service options to all except few
+service all with serviceImpl except Region, Subsistence, Document
+
+// Set an angular suffix
+// angularSuffix * with mySuffix
