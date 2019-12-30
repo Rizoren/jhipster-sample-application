@@ -15,7 +15,15 @@
             "fieldTypeBlobContent": "any"
         }
     ],
-    "relationships": [],
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "otherEntityName": "subsistence",
+            "otherEntityRelationshipName": "document",
+            "relationshipName": "subsistence",
+            "ownerSide": false
+        }
+    ],
     "changelogDate": "20191230070951",
     "javadoc": "The Document entity.",
     "entityTableName": "document",

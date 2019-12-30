@@ -1,4 +1,5 @@
 package com.mycompany.myapp.domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -39,6 +40,10 @@ public class Document implements Serializable {
 
     @Column(name = "doc_blob_content_type")
     private String docBlobContentType;
+
+    @OneToOne(mappedBy = "document")
+    @JsonIgnore
+    private Subsistence subsistence;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
@@ -99,6 +104,19 @@ public class Document implements Serializable {
 
     public void setDocBlobContentType(String docBlobContentType) {
         this.docBlobContentType = docBlobContentType;
+    }
+
+    public Subsistence getSubsistence() {
+        return subsistence;
+    }
+
+    public Document subsistence(Subsistence subsistence) {
+        this.subsistence = subsistence;
+        return this;
+    }
+
+    public void setSubsistence(Subsistence subsistence) {
+        this.subsistence = subsistence;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
