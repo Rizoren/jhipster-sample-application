@@ -32,7 +32,7 @@ to
 Region
 }
 relationship OneToOne {
-Subsistence{document(docName)}
+Subsistence
 to 
 Document
 }
