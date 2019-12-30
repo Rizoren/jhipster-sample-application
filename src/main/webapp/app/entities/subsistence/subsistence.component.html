@@ -1,0 +1,96 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="jhipsterSampleApplicationApp.subsistence.home.title">Subsistences</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-subsistence" [routerLink]="['/subsistence/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span class="hidden-sm-down"  jhiTranslate="jhipsterSampleApplicationApp.subsistence.home.createLabel">
+            Create a new Subsistence
+            </span>
+        </button>
+    </h2>
+    <jhi-alert-error></jhi-alert-error>
+    <jhi-alert></jhi-alert>
+    <div class="row">
+        <div class="col-sm-12">
+            <form name="searchForm" class="form-inline">
+                <div class="input-group w-100 mt-3">
+                    <input type="text" class="form-control" [(ngModel)]="currentSearch" id="currentSearch" name="currentSearch" placeholder="{{ 'jhipsterSampleApplicationApp.subsistence.home.search' | translate }}">
+                    <button class="input-group-append btn btn-info" (click)="search(currentSearch)">
+                        <fa-icon [icon]="'search'"></fa-icon>
+                    </button>
+                    <button class="input-group-append btn btn-danger" (click)="search('')" *ngIf="currentSearch">
+                        <fa-icon [icon]="'trash-alt'"></fa-icon>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="alert alert-warning" *ngIf="subsistences?.length === 0">
+        <span jhiTranslate="jhipsterSampleApplicationApp.subsistence.home.notFound">No subsistences found</span>
+    </div>
+    <div class="table-responsive" *ngIf="subsistences?.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+            <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="yearSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.yearSL">Year SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="quarterSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.quarterSL">Quarter SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="dateAcceptSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.dateAcceptSL">Date Accept SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="valuePerCapitaSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valuePerCapitaSL">Value Per Capita SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="valueForCapableSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForCapableSL">Value For Capable SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="valueForPensionersSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForPensionersSL">Value For Pensioners SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="valueForChildrenSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForChildrenSL">Value For Children SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="subsistence.regionName"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.subsistence">Subsistence</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let subsistence of subsistences ;trackBy: trackId">
+                <td><a [routerLink]="['/subsistence', subsistence.id, 'view' ]">{{subsistence.id}}</a></td>
+                <td>{{subsistence.yearSL}}</td>
+                <td>{{subsistence.quarterSL}}</td>
+                <td>{{subsistence.dateAcceptSL | date:'medium'}}</td>
+                <td>{{subsistence.valuePerCapitaSL}}</td>
+                <td>{{subsistence.valueForCapableSL}}</td>
+                <td>{{subsistence.valueForPensionersSL}}</td>
+                <td>{{subsistence.valueForChildrenSL}}</td>
+                <td>
+                    <div *ngIf="subsistence.subsistence">
+                        <a [routerLink]="['/region', subsistence.subsistence?.id, 'view' ]" >{{subsistence.subsistence?.regionName}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group">
+                        <button type="submit"
+                                [routerLink]="['/subsistence', subsistence.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/subsistence', subsistence.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit" (click)="delete(subsistence)"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="subsistences?.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+</div>

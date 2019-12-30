@@ -1,0 +1,30 @@
+{
+    "name": "Document",
+    "fields": [
+        {
+            "fieldName": "docName",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "docDate",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "docBlob",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20191230070951",
+    "javadoc": "The Document entity.",
+    "entityTableName": "document",
+    "dto": "no",
+    "pagination": "infinite-scroll",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

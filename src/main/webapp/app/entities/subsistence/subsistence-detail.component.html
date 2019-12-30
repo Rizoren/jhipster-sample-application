@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="subsistence">
+            <h2><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.detail.title">Subsistence</span> {{subsistence.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.yearSL">Year SL</span></dt>
+                <dd>
+                    <span>{{subsistence.yearSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.quarterSL">Quarter SL</span></dt>
+                <dd>
+                    <span>{{subsistence.quarterSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.dateAcceptSL">Date Accept SL</span></dt>
+                <dd>
+                    <span>{{subsistence.dateAcceptSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valuePerCapitaSL">Value Per Capita SL</span></dt>
+                <dd>
+                    <span>{{subsistence.valuePerCapitaSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForCapableSL">Value For Capable SL</span></dt>
+                <dd>
+                    <span>{{subsistence.valueForCapableSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForPensionersSL">Value For Pensioners SL</span></dt>
+                <dd>
+                    <span>{{subsistence.valueForPensionersSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForChildrenSL">Value For Children SL</span></dt>
+                <dd>
+                    <span>{{subsistence.valueForChildrenSL}}</span>
+                </dd>
+                <dt><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.subsistence">Subsistence</span></dt>
+                <dd>
+                    <div *ngIf="subsistence.subsistence">
+                        <a [routerLink]="['/region', subsistence.subsistence?.id, 'view']">{{subsistence.subsistence?.regionName}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/subsistence', subsistence.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

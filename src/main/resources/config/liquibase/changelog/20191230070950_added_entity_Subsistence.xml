@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    
+    <!--
+        Added the entity Subsistence.
+    -->
+    <changeSet id="20191230070950-1" author="jhipster">
+        <createTable tableName="subsistence" remarks="The Subsistence entity.">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="year_sl" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="quarter_sl" type="integer">
+                <constraints nullable="true" />
+            </column>
+            <column name="date_accept_sl" type="datetime">
+                <constraints nullable="true" />
+            </column>
+            <column name="value_per_capita_sl" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="value_for_capable_sl" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="value_for_pensioners_sl" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="value_for_children_sl" type="double">
+                <constraints nullable="true" />
+            </column>
+            <column name="subsistence_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
+        </createTable>
+        <dropDefaultValue tableName="subsistence" columnName="date_accept_sl" columnDataType="datetime"/>
+    </changeSet>
+
+    <changeSet id="20191230070950-1-relations" author="jhipster">
+
+    </changeSet>
+    <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here, do not remove-->
+
+    <!--
+        Load sample data generated with Faker.js
+        - This data can be easily edited using a CSV editor (or even MS Excel) and
+          is located in the 'src/main/resources/config/liquibase/fake-data' directory
+        - By default this data is applied when running with the JHipster 'dev' profile.
+          This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
+          Spring Boot configuration key.
+    -->
+    <changeSet id="20191230070950-1-data" author="jhipster" context="faker">
+        <loadData
+                  file="config/liquibase/fake-data/subsistence.csv"
+                  separator=";"
+                  tableName="subsistence">
+            <column name="id" type="numeric"/>
+            <column name="year_sl" type="numeric"/>
+            <column name="quarter_sl" type="numeric"/>
+            <column name="date_accept_sl" type="datetime"/>
+            <column name="value_per_capita_sl" type="numeric"/>
+            <column name="value_for_capable_sl" type="numeric"/>
+            <column name="value_for_pensioners_sl" type="numeric"/>
+            <column name="value_for_children_sl" type="numeric"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>
