@@ -24,7 +24,8 @@
       "valueForCapableSL": "Value For Capable SL",
       "valueForPensionersSL": "Value For Pensioners SL",
       "valueForChildrenSL": "Value For Children SL",
-      "subsistence": "Subsistence"
+      "document": "Document",
+      "region": "Region"
     }
   }
 }

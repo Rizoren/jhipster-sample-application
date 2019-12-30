@@ -36,7 +36,10 @@
             <column name="value_for_children_sl" type="double">
                 <constraints nullable="true" />
             </column>
-            <column name="subsistence_id" type="bigint">
+            <column name="document_id" type="bigint">
+                <constraints unique="true" nullable="true" uniqueConstraintName="ux_subsistence_document_id" />
+            </column>
+            <column name="region_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->

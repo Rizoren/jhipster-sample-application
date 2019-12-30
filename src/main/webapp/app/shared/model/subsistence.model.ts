@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { IDocument } from 'app/shared/model/document.model';
 import { IRegion } from 'app/shared/model/region.model';
 
 export interface ISubsistence {
@@ -10,7 +11,8 @@ export interface ISubsistence {
   valueForCapableSL?: number;
   valueForPensionersSL?: number;
   valueForChildrenSL?: number;
-  subsistence?: IRegion;
+  document?: IDocument;
+  region?: IRegion;
 }
 
 export class Subsistence implements ISubsistence {
@@ -23,6 +25,7 @@ export class Subsistence implements ISubsistence {
     public valueForCapableSL?: number,
     public valueForPensionersSL?: number,
     public valueForChildrenSL?: number,
-    public subsistence?: IRegion
+    public document?: IDocument,
+    public region?: IRegion
   ) {}
 }

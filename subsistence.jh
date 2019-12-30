@@ -27,9 +27,14 @@ entity Document {
 }
 
 relationship ManyToOne {
-Subsistence{subsistence(regionName)}
+Subsistence{region(regionName)}
 to 
 Region
+}
+relationship OneToOne {
+Subsistence{document(docName)}
+to 
+Document
 }
 
 // Set pagination options

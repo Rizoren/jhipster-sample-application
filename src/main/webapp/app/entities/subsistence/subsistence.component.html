@@ -41,7 +41,8 @@
             <th scope="col"  jhiSortBy="valueForCapableSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForCapableSL">Value For Capable SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="valueForPensionersSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForPensionersSL">Value For Pensioners SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="valueForChildrenSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForChildrenSL">Value For Children SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="subsistence.regionName"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.subsistence">Subsistence</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="document.docName"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.document">Document</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th scope="col"  jhiSortBy="region.regionName"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.region">Region</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"></th>
             </tr>
             </thead>
@@ -56,8 +57,13 @@
                 <td>{{subsistence.valueForPensionersSL}}</td>
                 <td>{{subsistence.valueForChildrenSL}}</td>
                 <td>
-                    <div *ngIf="subsistence.subsistence">
-                        <a [routerLink]="['/region', subsistence.subsistence?.id, 'view' ]" >{{subsistence.subsistence?.regionName}}</a>
+                    <div *ngIf="subsistence.document">
+                        <a [routerLink]="['/document', subsistence.document?.id, 'view' ]" >{{subsistence.document?.docName}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="subsistence.region">
+                        <a [routerLink]="['/region', subsistence.region?.id, 'view' ]" >{{subsistence.region?.regionName}}</a>
                     </div>
                 </td>
                 <td class="text-right">

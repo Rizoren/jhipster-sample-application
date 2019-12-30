@@ -47,10 +47,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.subsistence" for="field_subsistence">Subsistence</label>
-                    <select class="form-control" id="field_subsistence" name="subsistence" formControlName="subsistence">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.document" for="field_document">Document</label>
+                    <select class="form-control" id="field_document" name="document" formControlName="document">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="regionOption.id === editForm.get('subsistence')!.value?.id ? editForm.get('subsistence')!.value : regionOption" *ngFor="let regionOption of regions; trackBy: trackById">{{regionOption.regionName}}</option>
+                        <option [ngValue]="documentOption.id === editForm.get('document')!.value?.id ? editForm.get('document')!.value : documentOption" *ngFor="let documentOption of documents; trackBy: trackById">{{documentOption.docName}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.region" for="field_region">Region</label>
+                    <select class="form-control" id="field_region" name="region" formControlName="region">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="regionOption.id === editForm.get('region')!.value?.id ? editForm.get('region')!.value : regionOption" *ngFor="let regionOption of regions; trackBy: trackById">{{regionOption.regionName}}</option>
                     </select>
                 </div>
             </div>
