@@ -1,0 +1,53 @@
+{
+    "name": "Subsistence",
+    "fields": [
+        {
+            "fieldName": "yearSL",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "quarterSL",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "dateAcceptSL",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "valuePerCapitaSL",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "valueForCapableSL",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "valueForPensionersSL",
+            "fieldType": "Double"
+        },
+        {
+            "fieldName": "valueForChildrenSL",
+            "fieldType": "Double"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "region",
+            "otherEntityRelationshipName": "subsistence",
+            "relationshipName": "subsistence",
+            "otherEntityField": "regionName"
+        }
+    ],
+    "changelogDate": "20191230070950",
+    "javadoc": "The Subsistence entity.",
+    "entityTableName": "subsistence",
+    "dto": "no",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "readOnly": false,
+    "clientRootFolder": "",
+    "applications": "*"
+}

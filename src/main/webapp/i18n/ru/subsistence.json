@@ -1,0 +1,30 @@
+{
+  "jhipsterSampleApplicationApp": {
+    "subsistence": {
+      "home": {
+        "title": "Subsistences",
+        "createLabel": "Создать новый Subsistence",
+        "createOrEditLabel": "Создать или отредактировать Subsistence",
+        "search": "Найти Subsistence",
+        "notFound": "No Subsistences found"
+      },
+      "created": "Новый Subsistence создан с идентификатором {{ param }}",
+      "updated": "Subsistence обновлен с идентификатором {{ param }}",
+      "deleted": "Subsistence удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Subsistence {{ id }}?"
+      },
+      "detail": {
+        "title": "Subsistence"
+      },
+      "yearSL": "Year SL",
+      "quarterSL": "Quarter SL",
+      "dateAcceptSL": "Date Accept SL",
+      "valuePerCapitaSL": "Value Per Capita SL",
+      "valueForCapableSL": "Value For Capable SL",
+      "valueForPensionersSL": "Value For Pensioners SL",
+      "valueForChildrenSL": "Value For Children SL",
+      "subsistence": "Subsistence"
+    }
+  }
+}

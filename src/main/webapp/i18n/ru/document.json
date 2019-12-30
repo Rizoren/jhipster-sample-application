@@ -1,0 +1,25 @@
+{
+  "jhipsterSampleApplicationApp": {
+    "document": {
+      "home": {
+        "title": "Documents",
+        "createLabel": "Создать новый Document",
+        "createOrEditLabel": "Создать или отредактировать Document",
+        "search": "Найти Document",
+        "notFound": "No Documents found"
+      },
+      "created": "Новый Document создан с идентификатором {{ param }}",
+      "updated": "Document обновлен с идентификатором {{ param }}",
+      "deleted": "Document удален с идентификатором {{ param }}",
+      "delete": {
+        "question": "Вы уверены что хотите удалить Document {{ id }}?"
+      },
+      "detail": {
+        "title": "Document"
+      },
+      "docName": "Doc Name",
+      "docDate": "Doc Date",
+      "docBlob": "Doc Blob"
+    }
+  }
+}

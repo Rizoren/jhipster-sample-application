@@ -1,0 +1,67 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-subsistence-heading" jhiTranslate="jhipsterSampleApplicationApp.subsistence.home.createOrEditLabel">Create or edit a Subsistence</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id"
+                        readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.yearSL" for="field_yearSL">Year SL</label>
+                    <input type="number" class="form-control" name="yearSL" id="field_yearSL"
+                           formControlName="yearSL"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.quarterSL" for="field_quarterSL">Quarter SL</label>
+                    <input type="number" class="form-control" name="quarterSL" id="field_quarterSL"
+                           formControlName="quarterSL"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.dateAcceptSL" for="field_dateAcceptSL">Date Accept SL</label>
+                    <div class="d-flex">
+                        <input id="field_dateAcceptSL" type="datetime-local" class="form-control" name="dateAcceptSL" formControlName="dateAcceptSL" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.valuePerCapitaSL" for="field_valuePerCapitaSL">Value Per Capita SL</label>
+                    <input type="number" class="form-control" name="valuePerCapitaSL" id="field_valuePerCapitaSL"
+                           formControlName="valuePerCapitaSL"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForCapableSL" for="field_valueForCapableSL">Value For Capable SL</label>
+                    <input type="number" class="form-control" name="valueForCapableSL" id="field_valueForCapableSL"
+                           formControlName="valueForCapableSL"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForPensionersSL" for="field_valueForPensionersSL">Value For Pensioners SL</label>
+                    <input type="number" class="form-control" name="valueForPensionersSL" id="field_valueForPensionersSL"
+                           formControlName="valueForPensionersSL"/>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForChildrenSL" for="field_valueForChildrenSL">Value For Children SL</label>
+                    <input type="number" class="form-control" name="valueForChildrenSL" id="field_valueForChildrenSL"
+                           formControlName="valueForChildrenSL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="jhipsterSampleApplicationApp.subsistence.subsistence" for="field_subsistence">Subsistence</label>
+                    <select class="form-control" id="field_subsistence" name="subsistence" formControlName="subsistence">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="regionOption.id === editForm.get('subsistence')!.value?.id ? editForm.get('subsistence')!.value : regionOption" *ngFor="let regionOption of regions; trackBy: trackById">{{regionOption.regionName}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
