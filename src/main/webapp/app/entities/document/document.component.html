@@ -32,15 +32,15 @@
     <div class="table-responsive" *ngIf="documents?.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
-            <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="docName"><span jhiTranslate="jhipsterSampleApplicationApp.document.docName">Doc Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="docDate"><span jhiTranslate="jhipsterSampleApplicationApp.document.docDate">Doc Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="docBlob"><span jhiTranslate="jhipsterSampleApplicationApp.document.docBlob">Doc Blob</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <tr>
+            <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.document.docName">Doc Name</span></th>
+            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.document.docDate">Doc Date</span></th>
+            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.document.docBlob">Doc Blob</span></th>
             <th scope="col"></th>
             </tr>
             </thead>
-            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tbody>
             <tr *ngFor="let document of documents ;trackBy: trackId">
                 <td><a [routerLink]="['/document', document.id, 'view' ]">{{document.id}}</a></td>
                 <td>{{document.docName}}</td>

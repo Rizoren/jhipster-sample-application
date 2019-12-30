@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { JhiEventManager, JhiParseLinks } from 'ng-jhipster';
+import { JhiEventManager } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IRegion } from 'app/shared/model/region.model';
-
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { RegionService } from './region.service';
 import { RegionDeleteDialogComponent } from './region-delete-dialog.component';
 
@@ -16,30 +14,16 @@ import { RegionDeleteDialogComponent } from './region-delete-dialog.component';
   templateUrl: './region.component.html'
 })
 export class RegionComponent implements OnInit, OnDestroy {
-  regions: IRegion[];
+  regions?: IRegion[];
   eventSubscriber?: Subscription;
-  itemsPerPage: number;
-  links: any;
-  page: number;
-  predicate: string;
-  ascending: boolean;
   currentSearch: string;
 
   constructor(
     protected regionService: RegionService,
     protected eventManager: JhiEventManager,
     protected modalService: NgbModal,
-    protected parseLinks: JhiParseLinks,
     protected activatedRoute: ActivatedRoute
   ) {
-    this.regions = [];
-    this.itemsPerPage = ITEMS_PER_PAGE;
-    this.page = 0;
-    this.links = {
-      last: 0
-    };
-    this.predicate = 'id';
-    this.ascending = true;
     this.currentSearch =
       this.activatedRoute.snapshot && this.activatedRoute.snapshot.queryParams['search']
         ? this.activatedRoute.snapshot.queryParams['search']
@@ -50,47 +34,18 @@ export class RegionComponent implements OnInit, OnDestroy {
     if (this.currentSearch) {
       this.regionService
         .search({
-          query: this.currentSearch,
-          page: this.page,
-          size: this.itemsPerPage,
-          sort: this.sort()
+          query: this.currentSearch
         })
-        .subscribe((res: HttpResponse<IRegion[]>) => this.paginateRegions(res.body, res.headers));
+        .subscribe((res: HttpResponse<IRegion[]>) => (this.regions = res.body ? res.body : []));
       return;
     }
-    this.regionService
-      .query({
-        page: this.page,
-        size: this.itemsPerPage,
-        sort: this.sort()
-      })
-      .subscribe((res: HttpResponse<IRegion[]>) => this.paginateRegions(res.body, res.headers));
-  }
-
-  reset(): void {
-    this.page = 0;
-    this.regions = [];
-    this.loadAll();
-  }
-
-  loadPage(page: number): void {
-    this.page = page;
-    this.loadAll();
+    this.regionService.query().subscribe((res: HttpResponse<IRegion[]>) => {
+      this.regions = res.body ? res.body : [];
+      this.currentSearch = '';
+    });
   }
 
   search(query: string): void {
-    this.regions = [];
-    this.links = {
-      last: 0
-    };
-    this.page = 0;
-    if (query) {
-      this.predicate = '_score';
-      this.ascending = false;
-    } else {
-      this.predicate = 'id';
-      this.ascending = true;
-    }
     this.currentSearch = query;
     this.loadAll();
   }
@@ -112,29 +67,11 @@ export class RegionComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInRegions(): void {
-    this.eventSubscriber = this.eventManager.subscribe('regionListModification', () => this.reset());
+    this.eventSubscriber = this.eventManager.subscribe('regionListModification', () => this.loadAll());
   }
 
   delete(region: IRegion): void {
     const modalRef = this.modalService.open(RegionDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.region = region;
-  }
-
-  sort(): string[] {
-    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
-    if (this.predicate !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
-
-  protected paginateRegions(data: IRegion[] | null, headers: HttpHeaders): void {
-    const headersLink = headers.get('link');
-    this.links = this.parseLinks.parse(headersLink ? headersLink : '');
-    if (data) {
-      for (let i = 0; i < data.length; i++) {
-        this.regions.push(data[i]);
-      }
-    }
   }
 }

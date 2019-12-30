@@ -1,13 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { JhiEventManager, JhiParseLinks, JhiDataUtils } from 'ng-jhipster';
+import { JhiEventManager, JhiDataUtils } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { IDocument } from 'app/shared/model/document.model';
-
-import { ITEMS_PER_PAGE } from 'app/shared/constants/pagination.constants';
 import { DocumentService } from './document.service';
 import { DocumentDeleteDialogComponent } from './document-delete-dialog.component';
 
@@ -16,13 +14,8 @@ import { DocumentDeleteDialogComponent } from './document-delete-dialog.componen
   templateUrl: './document.component.html'
 })
 export class DocumentComponent implements OnInit, OnDestroy {
-  documents: IDocument[];
+  documents?: IDocument[];
   eventSubscriber?: Subscription;
-  itemsPerPage: number;
-  links: any;
-  page: number;
-  predicate: string;
-  ascending: boolean;
   currentSearch: string;
 
   constructor(
@@ -30,17 +23,8 @@ export class DocumentComponent implements OnInit, OnDestroy {
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
     protected modalService: NgbModal,
-    protected parseLinks: JhiParseLinks,
     protected activatedRoute: ActivatedRoute
   ) {
-    this.documents = [];
-    this.itemsPerPage = ITEMS_PER_PAGE;
-    this.page = 0;
-    this.links = {
-      last: 0
-    };
-    this.predicate = 'id';
-    this.ascending = true;
     this.currentSearch =
       this.activatedRoute.snapshot && this.activatedRoute.snapshot.queryParams['search']
         ? this.activatedRoute.snapshot.queryParams['search']
@@ -51,47 +35,18 @@ export class DocumentComponent implements OnInit, OnDestroy {
     if (this.currentSearch) {
       this.documentService
         .search({
-          query: this.currentSearch,
-          page: this.page,
-          size: this.itemsPerPage,
-          sort: this.sort()
+          query: this.currentSearch
         })
-        .subscribe((res: HttpResponse<IDocument[]>) => this.paginateDocuments(res.body, res.headers));
+        .subscribe((res: HttpResponse<IDocument[]>) => (this.documents = res.body ? res.body : []));
       return;
     }
-    this.documentService
-      .query({
-        page: this.page,
-        size: this.itemsPerPage,
-        sort: this.sort()
-      })
-      .subscribe((res: HttpResponse<IDocument[]>) => this.paginateDocuments(res.body, res.headers));
-  }
-
-  reset(): void {
-    this.page = 0;
-    this.documents = [];
-    this.loadAll();
-  }
-
-  loadPage(page: number): void {
-    this.page = page;
-    this.loadAll();
+    this.documentService.query().subscribe((res: HttpResponse<IDocument[]>) => {
+      this.documents = res.body ? res.body : [];
+      this.currentSearch = '';
+    });
   }
 
   search(query: string): void {
-    this.documents = [];
-    this.links = {
-      last: 0
-    };
-    this.page = 0;
-    if (query) {
-      this.predicate = '_score';
-      this.ascending = false;
-    } else {
-      this.predicate = 'id';
-      this.ascending = true;
-    }
     this.currentSearch = query;
     this.loadAll();
   }
@@ -121,29 +76,11 @@ export class DocumentComponent implements OnInit, OnDestroy {
   }
 
   registerChangeInDocuments(): void {
-    this.eventSubscriber = this.eventManager.subscribe('documentListModification', () => this.reset());
+    this.eventSubscriber = this.eventManager.subscribe('documentListModification', () => this.loadAll());
   }
 
   delete(document: IDocument): void {
     const modalRef = this.modalService.open(DocumentDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
     modalRef.componentInstance.document = document;
-  }
-
-  sort(): string[] {
-    const result = [this.predicate + ',' + (this.ascending ? 'asc' : 'desc')];
-    if (this.predicate !== 'id') {
-      result.push('id');
-    }
-    return result;
-  }
-
-  protected paginateDocuments(data: IDocument[] | null, headers: HttpHeaders): void {
-    const headersLink = headers.get('link');
-    this.links = this.parseLinks.parse(headersLink ? headersLink : '');
-    if (data) {
-      for (let i = 0; i < data.length; i++) {
-        this.documents.push(data[i]);
-      }
-    }
   }
 }

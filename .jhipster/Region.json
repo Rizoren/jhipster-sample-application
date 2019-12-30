@@ -27,7 +27,7 @@
     "javadoc": "The Region entity.",
     "entityTableName": "region",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "pagination": "no",
     "service": "serviceClass",
     "jpaMetamodelFiltering": true,
     "fluentMethods": true,
