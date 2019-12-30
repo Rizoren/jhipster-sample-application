@@ -14,8 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -537,8 +535,8 @@ public class RegionResourceIT {
     public void searchRegion() throws Exception {
         // Initialize the database
         regionService.save(region);
-        when(mockRegionSearchRepository.search(queryStringQuery("id:" + region.getId()), PageRequest.of(0, 20)))
-            .thenReturn(new PageImpl<>(Collections.singletonList(region), PageRequest.of(0, 1), 1));
+        when(mockRegionSearchRepository.search(queryStringQuery("id:" + region.getId())))
+            .thenReturn(Collections.singletonList(region));
         // Search the region
         restRegionMockMvc.perform(get("/api/_search/regions?query=id:" + region.getId()))
             .andExpect(status().isOk())

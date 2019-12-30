@@ -7,7 +7,7 @@ import * as moment from 'moment';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { SERVER_API_URL } from 'app/app.constants';
-import { createRequestOption, SearchWithPagination } from 'app/shared/util/request-util';
+import { createRequestOption, Search } from 'app/shared/util/request-util';
 import { IDocument } from 'app/shared/model/document.model';
 
 type EntityResponseType = HttpResponse<IDocument>;
@@ -51,7 +51,7 @@ export class DocumentService {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 
-  search(req: SearchWithPagination): Observable<EntityArrayResponseType> {
+  search(req: Search): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http
       .get<IDocument[]>(this.resourceSearchUrl, { params: options, observe: 'response' })

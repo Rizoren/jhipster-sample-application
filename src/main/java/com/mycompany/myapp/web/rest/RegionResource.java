@@ -7,16 +7,10 @@ import com.mycompany.myapp.service.dto.RegionCriteria;
 import com.mycompany.myapp.service.RegionQueryService;
 
 import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -97,17 +91,14 @@ public class RegionResource {
      * {@code GET  /regions} : get all the regions.
      *
 
-     * @param pageable the pagination information.
-
      * @param criteria the criteria which the requested entities should match.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of regions in body.
      */
     @GetMapping("/regions")
-    public ResponseEntity<List<Region>> getAllRegions(RegionCriteria criteria, Pageable pageable) {
+    public ResponseEntity<List<Region>> getAllRegions(RegionCriteria criteria) {
         log.debug("REST request to get Regions by criteria: {}", criteria);
-        Page<Region> page = regionQueryService.findByCriteria(criteria, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        List<Region> entityList = regionQueryService.findByCriteria(criteria);
+        return ResponseEntity.ok().body(entityList);
     }
 
     /**
@@ -153,14 +144,11 @@ public class RegionResource {
      * to the query.
      *
      * @param query the query of the region search.
-     * @param pageable the pagination information.
      * @return the result of the search.
      */
     @GetMapping("/_search/regions")
-    public ResponseEntity<List<Region>> searchRegions(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of Regions for query {}", query);
-        Page<Region> page = regionService.search(query, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+    public List<Region> searchRegions(@RequestParam String query) {
+        log.debug("REST request to search Regions for query {}", query);
+        return regionService.search(query);
     }
 }

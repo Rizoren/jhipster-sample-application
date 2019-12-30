@@ -25,7 +25,7 @@
     "javadoc": "The Document entity.",
     "entityTableName": "document",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "pagination": "no",
     "service": "serviceClass",
     "jpaMetamodelFiltering": true,
     "fluentMethods": true,

@@ -32,14 +32,14 @@
     <div class="table-responsive" *ngIf="regions?.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="reset.bind(this)">
-            <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="regionName"><span jhiTranslate="jhipsterSampleApplicationApp.region.regionName">Region Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"  jhiSortBy="regionCode"><span jhiTranslate="jhipsterSampleApplicationApp.region.regionCode">Region Code</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <tr>
+            <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.region.regionName">Region Name</span></th>
+            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.region.regionCode">Region Code</span></th>
             <th scope="col"></th>
             </tr>
             </thead>
-            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tbody>
             <tr *ngFor="let region of regions ;trackBy: trackId">
                 <td><a [routerLink]="['/region', region.id, 'view' ]">{{region.id}}</a></td>
                 <td>{{region.regionName}}</td>

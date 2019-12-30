@@ -6,12 +6,13 @@ import com.mycompany.myapp.repository.search.DocumentSearchRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
 
@@ -49,13 +50,12 @@ public class DocumentService {
     /**
      * Get all the documents.
      *
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Document> findAll(Pageable pageable) {
+    public List<Document> findAll() {
         log.debug("Request to get all Documents");
-        return documentRepository.findAll(pageable);
+        return documentRepository.findAll();
     }
 
 
@@ -86,11 +86,13 @@ public class DocumentService {
      * Search for the document corresponding to the query.
      *
      * @param query the query of the search.
-     * @param pageable the pagination information.
      * @return the list of entities.
      */
     @Transactional(readOnly = true)
-    public Page<Document> search(String query, Pageable pageable) {
-        log.debug("Request to search for a page of Documents for query {}", query);
-        return documentSearchRepository.search(queryStringQuery(query), pageable);    }
+    public List<Document> search(String query) {
+        log.debug("Request to search Documents for query {}", query);
+        return StreamSupport
+            .stream(documentSearchRepository.search(queryStringQuery(query)).spliterator(), false)
+            .collect(Collectors.toList());
+    }
 }
