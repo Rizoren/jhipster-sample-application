@@ -2,23 +2,23 @@
   "jhipsterSampleApplicationApp": {
     "region": {
       "home": {
-        "title": "Regions",
-        "createLabel": "Создать новый Region",
-        "createOrEditLabel": "Создать или отредактировать Region",
-        "search": "Найти Region",
-        "notFound": "No Regions found"
+        "title": "Субъекты Российской Федерации",
+        "createLabel": "Создать новый субъект",
+        "createOrEditLabel": "Создать или отредактировать субъект",
+        "search": "Найти субъект",
+        "notFound": "Субъект не найден"
       },
-      "created": "Новый Region создан с идентификатором {{ param }}",
-      "updated": "Region обновлен с идентификатором {{ param }}",
-      "deleted": "Region удален с идентификатором {{ param }}",
+      "created": "Новый субъект создан с идентификатором {{ param }}",
+      "updated": "Субъект обновлен с идентификатором {{ param }}",
+      "deleted": "Субъект удален с идентификатором {{ param }}",
       "delete": {
-        "question": "Вы уверены что хотите удалить Region {{ id }}?"
+        "question": "Вы уверены что хотите удалить субъект {{ id }}?"
       },
       "detail": {
-        "title": "Region"
+        "title": "Субъект"
       },
-      "regionName": "Region Name",
-      "regionCode": "Region Code"
+      "regionName": "Наименование субъекта",
+      "regionCode": "Код субъекта"
     }
   }
 }

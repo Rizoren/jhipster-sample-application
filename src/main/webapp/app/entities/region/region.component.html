@@ -33,17 +33,17 @@
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
-            <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
-            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.region.regionName">Region Name</span></th>
+            <th scope="col" hidden><span jhiTranslate="global.field.id">ID</span></th>
             <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.region.regionCode">Region Code</span></th>
+            <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.region.regionName">Region Name</span></th>
             <th scope="col"></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let region of regions ;trackBy: trackId">
-                <td><a [routerLink]="['/region', region.id, 'view' ]">{{region.id}}</a></td>
-                <td>{{region.regionName}}</td>
+                <td hidden><a [routerLink]="['/region', region.id, 'view' ]">{{region.id}}</a></td>
                 <td>{{region.regionCode}}</td>
+                <td>{{region.regionName}}</td>
                 <td class="text-right">
                     <div class="btn-group">
                         <button type="submit"

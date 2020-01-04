@@ -6,10 +6,10 @@
       "home": "Главная",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
-        "main": "Сущности",
-        "region": "Region",
-        "subsistence": "Subsistence",
-        "document": "Document",
+        "main": "Справочники",
+        "region": "Субъекты РФ",
+        "subsistence": "Прожиточный минимум",
+        "document": "Постановления",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {
@@ -93,7 +93,7 @@
   },
   "entity": {
     "action": {
-      "addblob": "Добавить двоичный объект",
+      "addblob": "Добавить файл",
       "addimage": "Добавить изображение",
       "back": "Назад",
       "cancel": "Отмена",

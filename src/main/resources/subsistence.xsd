@@ -1,0 +1,43 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
+           targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
+
+    <xs:element name="getSubsistenceByQYRCRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="quarter" type="xs:string"/>
+                <xs:element name="year" type="xs:string"/>
+                <xs:element name="regioncode" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getSubsistenceByDateRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="acceptdate" type="xs:string"/>
+                <xs:element name="regioncode" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getSubsistenceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="subsistence" type="tns:subsistencetype"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="subsistencetype">
+        <xs:sequence>
+            <xs:element name="value_per_capita_sl" type="xs:double"/>
+            <xs:element name="value_for_capable_sl" type="xs:double"/>
+            <xs:element name="value_for_pensioners_sl" type="xs:double"/>
+            <xs:element name="value_for_children_sl" type="xs:double"/>
+            <xs:element name="date_accept_sl" type="xs:date"/>
+            <xs:element name="quarter_sl" type="xs:string"/>
+            <xs:element name="year_sl" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

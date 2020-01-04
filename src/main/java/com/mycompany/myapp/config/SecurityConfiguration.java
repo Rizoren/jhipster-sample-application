@@ -51,7 +51,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/content/**")
             .antMatchers("/h2-console/**")
             .antMatchers("/swagger-ui/index.html")
-            .antMatchers("/test/**");
+            .antMatchers("/test/**")
+            //.antMatchers("/ws/**")
+        ;
     }
 
     @Override
@@ -85,6 +87,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/**").authenticated()
+            .antMatchers("/ws/**").permitAll()
+            /*TODO: Нужно сделать так что wsdl видно только авторизованным пользователям, пока не получилось...*/
+            //.antMatchers("/ws/**").authenticated()
+            //.antMatchers("/ws/subsistence.wsdl").hasRole("SERVICE")//.hasAuthority(AuthoritiesConstants.SERVICE)
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
             .antMatchers("/management/prometheus").permitAll()
