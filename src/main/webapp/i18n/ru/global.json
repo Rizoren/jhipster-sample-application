@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "JhipsterSampleApplication",
+    "title": "Прожиточный минимум",
     "browsehappy": "Ваш браузер <strong>устарел</strong>. Пожалуйста <a href=\"http://browsehappy.com/?locale=ru\">обновите ваш браузер</a>.",
     "menu": {
       "home": "Главная",
@@ -138,5 +138,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "Это ваш футтер"
+  "footer": "Проектная работа для курса Spring Framework."
 }

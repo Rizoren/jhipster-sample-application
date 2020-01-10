@@ -1,7 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="jhipsterSampleApplicationApp.subsistence.home.title">Subsistences</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-subsistence" [routerLink]="['/subsistence/new']">
+        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-subsistence" [routerLink]="['/subsistence/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down"  jhiTranslate="jhipsterSampleApplicationApp.subsistence.home.createLabel">
             Create a new Subsistence
@@ -33,7 +33,7 @@
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
-            <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th [hidden]="true" *jhiHasAnyAuthority="'ROLE_ADMIN'" scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="yearSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.yearSL">Year SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="quarterSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.quarterSL">Quarter SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="dateAcceptSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.dateAcceptSL">Date Accept SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
@@ -43,12 +43,12 @@
             <th scope="col"  jhiSortBy="valueForChildrenSL"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.valueForChildrenSL">Value For Children SL</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="doc.docName"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.doc">Doc</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th scope="col"  jhiSortBy="region.regionName"><span jhiTranslate="jhipsterSampleApplicationApp.subsistence.region">Region</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th scope="col"></th>
+            <th *jhiHasAnyAuthority="'ROLE_ADMIN'" scope="col"></th>
             </tr>
             </thead>
             <tbody>
             <tr *ngFor="let subsistence of subsistences ;trackBy: trackId">
-                <td><a [routerLink]="['/subsistence', subsistence.id, 'view' ]">{{subsistence.id}}</a></td>
+                <td [hidden]="true" *jhiHasAnyAuthority="'ROLE_ADMIN'"><a [routerLink]="['/subsistence', subsistence.id, 'view' ]">{{subsistence.id}}</a></td>
                 <td>{{subsistence.yearSL}}</td>
                 <td>{{subsistence.quarterSL}}</td>
                 <td>{{subsistence.dateAcceptSL | date:'medium'}}</td>
@@ -66,7 +66,7 @@
                         <a [routerLink]="['/region', subsistence.region?.id, 'view' ]" >{{subsistence.region?.regionName}}</a>
                     </div>
                 </td>
-                <td class="text-right">
+                <td *jhiHasAnyAuthority="'ROLE_ADMIN'" class="text-right">
                     <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/subsistence', subsistence.id, 'view' ]"

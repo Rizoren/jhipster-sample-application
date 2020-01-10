@@ -2,24 +2,24 @@
   "jhipsterSampleApplicationApp": {
     "document": {
       "home": {
-        "title": "Documents",
-        "createLabel": "Создать новый Document",
-        "createOrEditLabel": "Создать или отредактировать Document",
-        "search": "Найти Document",
-        "notFound": "No Documents found"
+        "title": "Постановления",
+        "createLabel": "Добавить новое Постановление",
+        "createOrEditLabel": "Добавить или отредактировать Постановление",
+        "search": "Найти Постановление",
+        "notFound": "Постановление не найдено"
       },
-      "created": "Новый Document создан с идентификатором {{ param }}",
-      "updated": "Document обновлен с идентификатором {{ param }}",
-      "deleted": "Document удален с идентификатором {{ param }}",
+      "created": "Новое Постановление создано с идентификатором {{ param }}",
+      "updated": "Постановление обновлено с идентификатором {{ param }}",
+      "deleted": "Постановление удалено с идентификатором {{ param }}",
       "delete": {
-        "question": "Вы уверены что хотите удалить Document {{ id }}?"
+        "question": "Вы уверены что хотите удалить Постановление {{ id }}?"
       },
       "detail": {
-        "title": "Document"
+        "title": "Постановление"
       },
-      "docName": "Doc Name",
-      "docDate": "Doc Date",
-      "docBlob": "Doc Blob"
+      "docName": "Наименование",
+      "docDate": "Дата",
+      "docBlob": "Файл"
     }
   }
 }

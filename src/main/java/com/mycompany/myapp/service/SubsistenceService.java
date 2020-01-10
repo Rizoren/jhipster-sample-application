@@ -3,11 +3,17 @@ package com.mycompany.myapp.service;
 import com.mycompany.myapp.domain.Subsistence;
 import com.mycompany.myapp.repository.SubsistenceRepository;
 import com.mycompany.myapp.repository.search.SubsistenceSearchRepository;
+import com.mycompany.myapp.service.dto.SubsistenceCriteria;
+import io.github.jhipster.service.Criteria;
+import io.github.jhipster.service.filter.Filter;
+import io.github.jhipster.service.filter.IntegerFilter;
+import io.github.jhipster.service.filter.StringFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,5 +98,13 @@ public class SubsistenceService {
     @Transactional(readOnly = true)
     public Page<Subsistence> search(String query, Pageable pageable) {
         log.debug("Request to search for a page of Subsistences for query {}", query);
-        return subsistenceSearchRepository.search(queryStringQuery(query), pageable);    }
+        return subsistenceSearchRepository.search(queryStringQuery(query), pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Subsistence> findOneByQYRC(String q, String y, String rc) {
+        log.debug("Request to get Subsistence : {}", q, y, rc);
+        Optional<Subsistence> s = subsistenceRepository.findFirstByQuarterSLAndYearSLAndRegion_RegionCode(Integer.parseInt(q), y, rc);
+        return s;
+    }
 }

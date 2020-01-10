@@ -2,11 +2,11 @@
   "jhipsterSampleApplicationApp": {
     "subsistence": {
       "home": {
-        "title": "Subsistences",
+        "title": "Subsistence",
         "createLabel": "Create a new Subsistence",
         "createOrEditLabel": "Create or edit a Subsistence",
         "search": "Search for Subsistence",
-        "notFound": "No Subsistences found"
+        "notFound": "No Subsistence found"
       },
       "created": "A new Subsistence is created with identifier {{ param }}",
       "updated": "A Subsistence is updated with identifier {{ param }}",
@@ -17,14 +17,14 @@
       "detail": {
         "title": "Subsistence"
       },
-      "yearSL": "Year SL",
-      "quarterSL": "Quarter SL",
-      "dateAcceptSL": "Date Accept SL",
-      "valuePerCapitaSL": "Value Per Capita SL",
-      "valueForCapableSL": "Value For Capable SL",
-      "valueForPensionersSL": "Value For Pensioners SL",
-      "valueForChildrenSL": "Value For Children SL",
-      "doc": "Doc",
+      "yearSL": "Year",
+      "quarterSL": "Quarter",
+      "dateAcceptSL": "Date Accept",
+      "valuePerCapitaSL": "Value Per Capita",
+      "valueForCapableSL": "Value For Capable",
+      "valueForPensionersSL": "Value For Pensioners",
+      "valueForChildrenSL": "Value For Children",
+      "doc": "Document",
       "region": "Region"
     }
   }

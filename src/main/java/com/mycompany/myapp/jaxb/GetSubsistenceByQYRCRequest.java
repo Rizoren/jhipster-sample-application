@@ -1,5 +1,7 @@
 package com.mycompany.myapp.jaxb;
 
+import com.mycompany.myapp.config.Constants;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -29,16 +31,14 @@ import javax.xml.bind.annotation.*;
     "year",
     "regioncode"
 })
-@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = "http://spring.io/guides/gs-producing-web-service")
+@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = Constants.NAMESPACE_URI)
 public class GetSubsistenceByQYRCRequest {
 
-    private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
-
-    @XmlElement(name = "quarter", namespace = NAMESPACE_URI)
+    @XmlElement(name = "quarter", namespace = Constants.NAMESPACE_URI)
     protected String quarter;
-    @XmlElement(name = "year", namespace = NAMESPACE_URI)
+    @XmlElement(name = "year", namespace = Constants.NAMESPACE_URI)
     protected String year;
-    @XmlElement(name = "regioncode", namespace = NAMESPACE_URI)
+    @XmlElement(name = "regioncode", namespace = Constants.NAMESPACE_URI)
     protected String regioncode;
 
     public String getQuarter() {

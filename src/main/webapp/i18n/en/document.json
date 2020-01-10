@@ -17,9 +17,9 @@
       "detail": {
         "title": "Document"
       },
-      "docName": "Doc Name",
-      "docDate": "Doc Date",
-      "docBlob": "Doc Blob"
+      "docName": "Name",
+      "docDate": "Date",
+      "docBlob": "File"
     }
   }
 }

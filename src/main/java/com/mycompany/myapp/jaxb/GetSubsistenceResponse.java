@@ -1,6 +1,8 @@
 package com.mycompany.myapp.jaxb;
 
+import com.mycompany.myapp.config.Constants;
 import com.mycompany.myapp.domain.Subsistence;
+import com.mycompany.myapp.service.dto.SubsistenceDTO;
 
 import javax.xml.bind.annotation.*;
 
@@ -14,7 +16,7 @@ import javax.xml.bind.annotation.*;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="subsistence" type="{http://spring.io/guides/gs-producing-web-service}subsistencetype"/>
+ *         &lt;element name="subsistence" type="{http://localhost:8080}subsistencetype"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -27,19 +29,17 @@ import javax.xml.bind.annotation.*;
 @XmlType(name = "", propOrder = {
     "subsistence"
 })
-@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = "http://spring.io/guides/gs-producing-web-service")
+@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = Constants.NAMESPACE_URI)
 public class GetSubsistenceResponse {
 
-    private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
+    @XmlElement(name = "subsistence", namespace = Constants.NAMESPACE_URI)
+    protected SubsistenceDTO subsistence;
 
-    @XmlElement(name = "subsistence", namespace = NAMESPACE_URI)
-    protected Subsistence subsistence;
-
-    public Subsistence getSubsistence() {
+    public SubsistenceDTO getSubsistence() {
         return this.subsistence;
     }
 
-    public void setSubsistence(Subsistence subsistence) {
+    public void setSubsistence(SubsistenceDTO subsistence) {
         this.subsistence = subsistence;
     }
 }

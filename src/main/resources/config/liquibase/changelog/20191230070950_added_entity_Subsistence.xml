@@ -74,6 +74,8 @@
             <column name="value_for_pensioners_sl" type="numeric"/>
             <column name="value_for_children_sl" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here, do not remove-->
+            <column name="doc_id" type="numeric"/>
+            <column name="region_id" type="numeric"/>
         </loadData>
     </changeSet>
 

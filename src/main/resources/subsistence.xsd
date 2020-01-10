@@ -1,5 +1,5 @@
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://spring.io/guides/gs-producing-web-service"
-           targetNamespace="http://spring.io/guides/gs-producing-web-service" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://localhost:8080"
+           targetNamespace="http://localhost:8080" elementFormDefault="qualified">
 
     <xs:element name="getSubsistenceByQYRCRequest">
         <xs:complexType>
@@ -23,12 +23,12 @@
     <xs:element name="getSubsistenceResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="subsistence" type="tns:subsistencetype"/>
+                <xs:element name="subsistence" type="tns:subsistence"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="subsistencetype">
+    <xs:complexType name="subsistence">
         <xs:sequence>
             <xs:element name="value_per_capita_sl" type="xs:double"/>
             <xs:element name="value_for_capable_sl" type="xs:double"/>

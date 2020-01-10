@@ -1,7 +1,7 @@
 <div>
     <h2 id="page-heading">
         <span jhiTranslate="jhipsterSampleApplicationApp.document.home.title">Documents</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-document" [routerLink]="['/document/new']">
+        <button *jhiHasAnyAuthority="'ROLE_ADMIN'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-document" [routerLink]="['/document/new']">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span class="hidden-sm-down"  jhiTranslate="jhipsterSampleApplicationApp.document.home.createLabel">
             Create a new Document
@@ -33,7 +33,7 @@
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
             <tr>
-            <th scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
+            <th [hidden]="true" *jhiHasAnyAuthority="'ROLE_ADMIN'" scope="col" ><span jhiTranslate="global.field.id">ID</span></th>
             <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.document.docName">Doc Name</span></th>
             <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.document.docDate">Doc Date</span></th>
             <th scope="col" ><span jhiTranslate="jhipsterSampleApplicationApp.document.docBlob">Doc Blob</span></th>
@@ -42,14 +42,14 @@
             </thead>
             <tbody>
             <tr *ngFor="let document of documents ;trackBy: trackId">
-                <td><a [routerLink]="['/document', document.id, 'view' ]">{{document.id}}</a></td>
+                <td [hidden]="true"><a [routerLink]="['/document', document.id, 'view' ]">{{document.id}}</a></td>
                 <td>{{document.docName}}</td>
                 <td>{{document.docDate | date:'medium'}}</td>
                 <td>
                     <a *ngIf="document.docBlob" (click)="openFile(document.docBlobContentType, document.docBlob)" jhiTranslate="entity.action.open">open</a>
                     <span *ngIf="document.docBlob">{{document.docBlobContentType}}, {{byteSize(document.docBlob)}}</span>
                 </td>
-                <td class="text-right">
+                <td *jhiHasAnyAuthority="'ROLE_ADMIN'" class="text-right">
                     <div class="btn-group">
                         <button type="submit"
                                 [routerLink]="['/document', document.id, 'view' ]"

@@ -27,12 +27,12 @@ import javax.xml.bind.annotation.*;
     "acceptdate",
     "regioncode"
 })
-@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = "http://spring.io/guides/gs-producing-web-service")
+@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = "http://localhost:8080")
 public class GetSubsistenceByDateRequest {
 
-    private static final String NAMESPACE_URI = "http://spring.io/guides/gs-producing-web-service";
+    private static final String NAMESPACE_URI = "http://localhost:8080";
 
-    @XmlElement(name = "acceptdate", namespace = NAMESPACE_URI)
+    @XmlElement(name = "acceptdate")
     protected String acceptdate;
     @XmlElement(name = "regioncode", namespace = NAMESPACE_URI)
     protected String regioncode;
