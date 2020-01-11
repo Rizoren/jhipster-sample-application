@@ -29,7 +29,7 @@ import javax.xml.bind.annotation.*;
 @XmlType(name = "", propOrder = {
     "subsistence"
 })
-@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = Constants.NAMESPACE_URI)
+@XmlRootElement(namespace = Constants.NAMESPACE_URI)
 public class GetSubsistenceResponse {
 
     @XmlElement(name = "subsistence", namespace = Constants.NAMESPACE_URI)

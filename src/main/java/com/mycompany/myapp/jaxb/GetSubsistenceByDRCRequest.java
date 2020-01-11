@@ -1,5 +1,7 @@
 package com.mycompany.myapp.jaxb;
 
+import com.mycompany.myapp.config.Constants;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -27,14 +29,12 @@ import javax.xml.bind.annotation.*;
     "acceptdate",
     "regioncode"
 })
-@XmlRootElement(name = "getSubsistenceByQYRCRequest", namespace = "http://localhost:8080")
-public class GetSubsistenceByDateRequest {
+@XmlRootElement(name = "getSubsistenceByDRCRequest", namespace = Constants.NAMESPACE_URI)
+public class GetSubsistenceByDRCRequest {
 
-    private static final String NAMESPACE_URI = "http://localhost:8080";
-
-    @XmlElement(name = "acceptdate")
+    @XmlElement(name = "acceptdate", namespace = Constants.NAMESPACE_URI)
     protected String acceptdate;
-    @XmlElement(name = "regioncode", namespace = NAMESPACE_URI)
+    @XmlElement(name = "regioncode", namespace = Constants.NAMESPACE_URI)
     protected String regioncode;
 
     public String getAcceptdate() {

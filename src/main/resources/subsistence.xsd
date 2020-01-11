@@ -11,7 +11,7 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="getSubsistenceByDateRequest">
+    <xs:element name="getSubsistenceByDRCRequest">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="acceptdate" type="xs:string"/>

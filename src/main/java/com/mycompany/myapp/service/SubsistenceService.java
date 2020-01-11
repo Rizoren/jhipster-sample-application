@@ -17,6 +17,13 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.elasticsearch.index.query.QueryBuilders.*;
@@ -105,6 +112,14 @@ public class SubsistenceService {
     public Optional<Subsistence> findOneByQYRC(String q, String y, String rc) {
         log.debug("Request to get Subsistence : {}", q, y, rc);
         Optional<Subsistence> s = subsistenceRepository.findFirstByQuarterSLAndYearSLAndRegion_RegionCode(Integer.parseInt(q), y, rc);
+        return s;
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<Subsistence> findOneByDate(String date, String rc) throws ParseException {
+        log.debug("Request to get Subsistence : {}", date, rc);
+        Instant d = new SimpleDateFormat("dd.MM.yyyy").parse(date).toInstant();
+        Optional<Subsistence> s = subsistenceRepository.findFirstByDateAcceptSLIsLessThanEqualAndRegion_RegionCodeOrderByDateAcceptSLDesc(d, rc);
         return s;
     }
 }
